@@ -1,8 +1,8 @@
-# Node Module Starter 🛠️
+# Crypto OTP 🟢
 
 Version 0.1.0
 
-## Starter repository for developing node_modules
+## Lightweight TypeScript HOTP/TOTP library
 
 ### Table of Contents
 
@@ -16,36 +16,18 @@ Version 0.1.0
 
 ---
 
-### Getting started (delete once cloned in your project)
+### Getting started
 
-Run the following command to start using `node-module-starter` for your projects:
-
-```bash
-git clone git@github.com:alessiofrittoli/node-module-starter.git && git remote remove origin
-```
-
-install dependencies
+Run the following command to start using `crypto-otp` in your projects:
 
 ```bash
-pnpm i
-```
-
-Read the [Creating a repository from a template - GitHub Docs](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for more in-detail informations about creating a new Repository from a template using GitHub web interface.
-
----
-
-### Getting started (customize based on your project needs)
-
-Run the following command to start using `{package_name}` in your projects:
-
-```bash
-npm i {package_name}
+npm i @alessiofrittoli/crypto-otp
 ```
 
 or using `pnpm`
 
 ```bash
-pnpm i {package_name}
+pnpm i @alessiofrittoli/crypto-otp
 ```
 
 ---
