@@ -1,0 +1,55 @@
+{
+	"name": "@alessiofrittoli/node-module-starter",
+	"version": "0.1.0",
+	"description": "Basic Node Module repository",
+	"author": {
+		"name": "Alessio Frittoli",
+		"email": "info@alessiofrittoli.it",
+		"url": "https://alessiofrittoli.it"
+	},
+	"license": "MIT",
+	"keywords": [
+		"crypto",
+		"one-time-passwords",
+		"hmac-otp",
+		"time-otp"
+	],
+	"homepage": "https://github.com/alessiofrittoli/node-module-starter#readme",
+	"bugs": {
+		"url": "https://github.com/alessiofrittoli/node-module-starter/issues",
+		"email": "info@alessiofrittoli.it"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/alessiofrittoli/node-module-starter.git"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"sideEffects": false,
+	"scripts": {
+		"build": "eslint && jest --ci --verbose && tsup",
+		"lint": "eslint",
+		"test": "jest --watchAll --verbose",
+		"test:ci": "jest --ci --verbose",
+		"test:jest": "pnpm test jext.test.ts"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.16.0",
+		"@jest/globals": "^29.7.0",
+		"@types/jest": "^29.5.14",
+		"@types/node": "^22.10.1",
+		"dotenv": "^16.4.5",
+		"eslint": "^9.16.0",
+		"globals": "^15.12.0",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.2.5",
+		"ts-node": "^10.9.2",
+		"tsup": "^8.3.5",
+		"typescript": "^5.7.2",
+		"typescript-eslint": "^8.16.0"
+	}
+}
