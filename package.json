@@ -1,5 +1,5 @@
 {
-	"name": "@alessiofrittoli/node-module-starter",
+	"name": "@alessiofrittoli/crypto-otp",
 	"version": "0.1.0",
 	"description": "Basic Node Module repository",
 	"author": {
@@ -14,14 +14,14 @@
 		"hmac-otp",
 		"time-otp"
 	],
-	"homepage": "https://github.com/alessiofrittoli/node-module-starter#readme",
+	"homepage": "https://github.com/alessiofrittoli/crypto-otp#readme",
 	"bugs": {
-		"url": "https://github.com/alessiofrittoli/node-module-starter/issues",
+		"url": "https://github.com/alessiofrittoli/crypto-otp/issues",
 		"email": "info@alessiofrittoli.it"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alessiofrittoli/node-module-starter.git"
+		"url": "git+https://github.com/alessiofrittoli/crypto-otp.git"
 	},
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
