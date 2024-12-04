@@ -10,6 +10,7 @@
 .DS_Store
 
 eslint.config.mjs
-jest.config.js
+jest.config.ts
+jest.setup.ts
 tsconfig.json
 tsup.config.ts
