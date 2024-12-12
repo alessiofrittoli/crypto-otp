@@ -76,19 +76,19 @@ class Otp
 	 *
 	 * @param	algorithm	The HMAC algorithm. Usually `SHA-1` is used for the 20 bytes HEX secret key.
 	 * @param	hmacKey		The HMAC key derived from OTP secret. @see {@link OTP.HmacKey}.
-	 * @param	counter		The OTP counter number.
+	 * @param	counter		The OTP formatted counter string.
 	 *
 	 * @returns	The HMAC digest.
 	 */
 	static createDigest(
 		algorithm	: Algo.Hash,
 		hmacKey		: string,
-		counter		: number,
+		counter		: string,
 	)
 	{
 		return (
 			Hmac.digest(
-				Buffer.from( counter.toString(), 'hex' ),
+				Buffer.from( counter, 'hex' ),
 				Buffer.from( hmacKey, 'hex' ),
 				algorithm
 			)

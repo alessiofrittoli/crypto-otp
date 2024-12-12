@@ -73,7 +73,7 @@ describe( 'Otp.HmacKey()', () => {
 describe( 'Otp.createDigest()', () => {
 	
 	it( 'creates a digest', () => {
-		const zeroCounterDigest	= Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), 0 )
+		const zeroCounterDigest	= Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '0' )
 
 		expect( zeroCounterDigest.toString( 'hex' ) )
 			.toBe( 'dfb17b038bd02e5b52dc3701b85f0e219e4bc0ed4dff4d7ec249c31d15a3c80f' )
@@ -81,8 +81,8 @@ describe( 'Otp.createDigest()', () => {
 
 
 	it( 'creates different digests with different counters', () => {
-		expect( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), 1 ) )
-			.not.toBe( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), 2 ) )
+		expect( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '1' ) )
+			.not.toBe( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '2' ) )
 	} )
 
 } )
@@ -90,7 +90,7 @@ describe( 'Otp.createDigest()', () => {
 
 describe( 'Otp.DigestToToken()', () => {
 
-	const zeroCounterDigest = Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), 0 )
+	const zeroCounterDigest = Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '0' )
 
 	it( 'generates a 6 digits token', () => {
 		const token = (
@@ -121,10 +121,10 @@ describe( 'Otp.DigestToToken()', () => {
 
 	it( 'generates different tokens with different counters', () => {
 		const token1 = (
-			Otp.DigestToToken( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), 10 ) )
+			Otp.DigestToToken( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '10' ) )
 		)
 		const token2 = (
-			Otp.DigestToToken( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), 11 ) )
+			Otp.DigestToToken( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '11' ) )
 		)
 		expect( token1 ).not.toBe( token2 )
 	} )
