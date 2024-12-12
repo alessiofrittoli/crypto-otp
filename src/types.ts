@@ -11,7 +11,7 @@ namespace OTP
 		key: string
 		/** The secret key encoding. Default: `hex`. */
 		encoding?: OTP.Encoding
-		/** The hash algorithm used by the credential. Default: `SHA1`. */
+		/** The hash algorithm used by the credential. Default: `SHA-1`. */
 		algorithm?: Algo.Hash
 	}
 	export type Secrets = Record<OTP.Encoding, string>

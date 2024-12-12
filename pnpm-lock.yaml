@@ -11,6 +11,15 @@ importers:
       '@alessiofrittoli/crypto-algorithm':
         specifier: ^1.2.0
         version: 1.2.0
+      '@alessiofrittoli/crypto-encoder':
+        specifier: ^1.1.0
+        version: 1.1.0
+      '@alessiofrittoli/crypto-key':
+        specifier: ^1.0.0
+        version: 1.0.0
+      '@alessiofrittoli/math-utils':
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.16.0
@@ -59,6 +68,21 @@ packages:
 
   '@alessiofrittoli/crypto-algorithm@1.2.0':
     resolution: {integrity: sha512-j6OQzQqyy4gI/5tNzTFheDNgTfEuXXYUiTDOBZtQ7thExhRakwVr6V4futacpVyjEdHujAQFGV0Mvz3nCjpVUA==}
+
+  '@alessiofrittoli/crypto-buffer@2.0.1':
+    resolution: {integrity: sha512-hTFnVRawDlDJUkY0fTgEbsbCP+lQ6cXqAyzrVp/dn7AB+neWb1JMzLJRGC9kiImPhmuEsW3/R+d/JyXSU76msA==}
+
+  '@alessiofrittoli/crypto-encoder@1.1.0':
+    resolution: {integrity: sha512-qq/QPPaRF+hNEV2Szc7xlqef8N4NfrOT4vJS87g4d4WAVYLpPps24Hq8a8bFI0MH+q9ZppOT7UBUHZGT3TRiyQ==}
+
+  '@alessiofrittoli/crypto-key@1.0.0':
+    resolution: {integrity: sha512-82N4Ksby0BAXCWod2uXDiunQ9OVgSzGXXCBc9NgrzX386g+DSKIcFekHf6JPgXJv5TbrvpbPXmolWJFobY0AjQ==}
+
+  '@alessiofrittoli/math-utils@1.0.0':
+    resolution: {integrity: sha512-3tp6voo+BxQsTqTwAONyBI1KH/WOoZYj59L2+soCyH1ZBGc3u6pqtBHAWjI5MtKblf1B4EMqnWMpK1gNTsoB8Q==}
+
+  '@alessiofrittoli/type-utils@0.3.2':
+    resolution: {integrity: sha512-VbrmEWFueHfSYRBvzu6WjrzH9pyqt8QNxNQ52Pc8LxyWWX8RUWK6xhfrF3HHUw27b+d2FqHNk5HVf3pHVC1ZPg==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -2261,6 +2285,22 @@ packages:
 snapshots:
 
   '@alessiofrittoli/crypto-algorithm@1.2.0': {}
+
+  '@alessiofrittoli/crypto-buffer@2.0.1': {}
+
+  '@alessiofrittoli/crypto-encoder@1.1.0':
+    dependencies:
+      '@alessiofrittoli/crypto-buffer': 2.0.1
+      '@alessiofrittoli/type-utils': 0.3.2
+
+  '@alessiofrittoli/crypto-key@1.0.0':
+    dependencies:
+      '@alessiofrittoli/crypto-algorithm': 1.2.0
+      '@alessiofrittoli/crypto-buffer': 2.0.1
+
+  '@alessiofrittoli/math-utils@1.0.0': {}
+
+  '@alessiofrittoli/type-utils@0.3.2': {}
 
   '@ampproject/remapping@2.3.0':
     dependencies:
