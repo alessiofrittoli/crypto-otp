@@ -39,6 +39,16 @@
 			"import": "./dist/Otp.mjs",
 			"require": "./dist/Otp.js"
 		},
+		"./Hotp": {
+			"types": "./dist/Hotp.d.ts",
+			"import": "./dist/Hotp.mjs",
+			"require": "./dist/Hotp.js"
+		},
+		"./Totp": {
+			"types": "./dist/Totp.d.ts",
+			"import": "./dist/Totp.mjs",
+			"require": "./dist/Totp.js"
+		},
 		"./types": {
 			"types": "./dist/types.d.ts",
 			"import": "./dist/types.mjs",
@@ -56,7 +66,8 @@
 		"test:jest": "pnpm test jest.test.ts",
 		"test:jest:jsdom": "JSDOM=true pnpm test:jest",
 		"test:otp": "pnpm test otp.test.ts",
-		"test:hotp": "pnpm test hotp.test.ts"
+		"test:hotp": "pnpm test hotp.test.ts",
+		"test:totp": "pnpm test totp.test.ts"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
