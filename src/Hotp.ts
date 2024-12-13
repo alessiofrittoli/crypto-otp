@@ -146,8 +146,7 @@ class Hotp extends Otp
 		options.digits			||= Hotp.Digits
 		options.counter 		??= 0
 
-		// return options as NonNullableFields<Full<T>>
-		return options as NonNullable<T>
+		return options as NonNullableFields<DeepFull<T>>
 	}
 
 
