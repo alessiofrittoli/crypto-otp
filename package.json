@@ -78,6 +78,7 @@
 		"@alessiofrittoli/crypto-algorithm": "^1.2.0",
 		"@alessiofrittoli/crypto-encoder": "^1.1.0",
 		"@alessiofrittoli/crypto-key": "^1.0.0",
-		"@alessiofrittoli/math-utils": "^1.0.0"
+		"@alessiofrittoli/math-utils": "^1.0.0",
+		"@alessiofrittoli/type-utils": "^1.0.0"
 	}
 }

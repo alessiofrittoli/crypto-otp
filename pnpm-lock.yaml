@@ -20,6 +20,9 @@ importers:
       '@alessiofrittoli/math-utils':
         specifier: ^1.0.0
         version: 1.0.0
+      '@alessiofrittoli/type-utils':
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.16.0
@@ -83,6 +86,9 @@ packages:
 
   '@alessiofrittoli/type-utils@0.3.2':
     resolution: {integrity: sha512-VbrmEWFueHfSYRBvzu6WjrzH9pyqt8QNxNQ52Pc8LxyWWX8RUWK6xhfrF3HHUw27b+d2FqHNk5HVf3pHVC1ZPg==}
+
+  '@alessiofrittoli/type-utils@1.0.0':
+    resolution: {integrity: sha512-a1ohu7g23s/MRVqs5d67yEKMSyz6IMDpCukHWJ9tf4SGyEvgdnPpmySOn6YJEgopYUlOn/YW8mBBUW5dy6ZSFA==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -2301,6 +2307,8 @@ snapshots:
   '@alessiofrittoli/math-utils@1.0.0': {}
 
   '@alessiofrittoli/type-utils@0.3.2': {}
+
+  '@alessiofrittoli/type-utils@1.0.0': {}
 
   '@ampproject/remapping@2.3.0':
     dependencies:
