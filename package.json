@@ -55,7 +55,8 @@
 		"test:ci:jsdom": "JSDOM=true pnpm test:ci",
 		"test:jest": "pnpm test jest.test.ts",
 		"test:jest:jsdom": "JSDOM=true pnpm test:jest",
-		"test:otp": "pnpm test otp.test.ts"
+		"test:otp": "pnpm test otp.test.ts",
+		"test:hotp": "pnpm test hotp.test.ts"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
