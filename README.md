@@ -503,9 +503,7 @@ pnpm test:jest
 pnpm test:jest:jsdom
 ```
 
--->
-
----
+--- -->
 
 ### Contributing
 
