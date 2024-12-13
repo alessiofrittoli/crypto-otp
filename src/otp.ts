@@ -84,7 +84,7 @@ class Otp
 		algorithm	: Algo.Hash,
 		hmacKey		: string,
 		counter		: string,
-	)
+	): Buffer
 	{
 		return (
 			Hmac.digest(

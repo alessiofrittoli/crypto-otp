@@ -106,6 +106,52 @@ describe( 'Hotp.GetToken()', () => {
 } )
 
 
+describe( 'Hotp.Counter()', () => {
+
+	it( 'returns the formatted counter', () => {
+		expect( Hotp.Counter( 10 ) )
+			.toBe( '000000000000000a' )
+	} )
+
+
+	it( 'supports very large numbers', () => {
+		expect( Hotp.Counter( 2345434545234e+8 ) )
+			.toBe( 'cb6f1bd397c3e0000' )
+	} )
+
+} )
+
+
+describe( 'Hotp.AuthURL()', () => {
+
+	it( 'parses Auth URL correctly', () => {
+		const secrets = Hotp.GetSecrets( {
+			secret: { key: hexSecret }
+		} )
+
+		const url = new URL( Hotp.AuthURL( {
+			label	: 'Issuer:example@email.com',
+			digits	: 8,
+			counter	: 10,
+			secret	: { key: hexSecret },
+			issuer	: 'Issuer',
+		} ) )
+		const params = url.searchParams		
+		
+		expect( url.protocol ).toBe( 'otpauth:' )
+		expect( url.host ).toBe( 'hotp' )
+		expect( url.pathname ).toBe( '/Issuer:example@email.com' )
+		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
+		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
+		expect( params.get( 'digits' ) ).toBe( '8' )
+		expect( params.get( 'counter' ) ).toBe( '10' )
+		expect( params.get( 'issuer' ) ).toBe( 'Issuer' )
+
+	} )
+	
+} )
+
+
 describe( 'Hotp.GetDelta()', () => {
 
 	const options: OTP.HOTP.GetTokenOptions = {
@@ -237,46 +283,31 @@ describe( 'Hotp.Verify()', () => {
 } )
 
 
-describe( 'Hotp.Counter()', () => {
+describe( 'Hotp.ResolveOptions()', () => {
 
-	it( 'returns the formatted counter', () => {
-		expect( Hotp.Counter( 10 ) )
-			.toBe( '000000000000000a' )
+	const options: OTP.HOTP.GetTokenOptions = {
+		secret	: { key: hexSecret },
+		counter	: 2,
+	}
+
+	it( 'resolves defaults options', () => {
+		const resolved		= Hotp.ResolveOptions( options )
+		const { secret }	= resolved
+
+		expect( 'secret' in resolved ).toBe( true )
+		expect( 'digits' in resolved ).toBe( true )
+		expect( 'counter' in resolved ).toBe( true )
+
+		expect( 'key' in secret ).toBe( true )
+		expect( 'algorithm' in secret ).toBe( true )
+		expect( 'encoding' in secret ).toBe( true )
+
+		expect( secret.key ).toBe( hexSecret )
+		expect( secret.algorithm ).toBe( 'SHA-1' )
+		expect( secret.encoding ).toBe( 'hex' )
+
+		expect( resolved.digits ).toBe( 6 )
+		expect( resolved.counter ).toBe( 2 )
 	} )
-
-
-	it( 'supports very large numbers', () => {
-		expect( Hotp.Counter( 2345434545234e+8 ) )
-			.toBe( 'cb6f1bd397c3e0000' )
-	} )
-
-} )
-
-
-describe( 'Hotp.AuthURL()', () => {
-
-	it( 'parses Auth URL correctly', () => {
-		const secrets = Hotp.GetSecrets( {
-			secret: { key: hexSecret }
-		} )
-
-		const url = new URL( Hotp.AuthURL( {
-			label	: 'Issuer:example@email.com',
-			digits	: 8,
-			counter	: 10,
-			secret	: { key: hexSecret },
-			issuer	: 'Issuer',
-		} ) )
-		const params = url.searchParams		
-		
-		expect( url.protocol ).toBe( 'otpauth:' )
-		expect( url.host ).toBe( 'hotp' )
-		expect( url.pathname ).toBe( '/Issuer:example@email.com' )
-		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
-		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
-		expect( params.get( 'digits' ) ).toBe( '8' )
-		expect( params.get( 'counter' ) ).toBe( '10' )
-		expect( params.get( 'issuer' ) ).toBe( 'Issuer' )
-
-	} )
+	
 } )

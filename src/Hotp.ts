@@ -156,7 +156,7 @@ class Hotp extends Otp
 	 * @param	options The HOTP options. @see {@link OTP.HOTP.GetTokenOptions}
 	 * @returns The HMAC digest Buffer.
 	 */
-	static Digest( options: Omit<OTP.HOTP.GetTokenOptions, 'digits'> )
+	static Digest( options: Omit<OTP.HOTP.GetTokenOptions, 'digits'> ): Buffer
 	{
 		options.secret.algorithm||= Hotp.Algorithm
 		options.secret.encoding	||= Hotp.Encoding
