@@ -1,7 +1,7 @@
 {
 	"name": "@alessiofrittoli/crypto-otp",
 	"version": "1.0.0",
-	"description": "Basic Node Module repository",
+	"description": "Lightweight TypeScript HOTP/TOTP library",
 	"author": {
 		"name": "Alessio Frittoli",
 		"email": "info@alessiofrittoli.it",
