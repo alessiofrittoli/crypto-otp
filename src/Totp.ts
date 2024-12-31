@@ -1,6 +1,6 @@
-import Otp from './Otp'
-import Hotp from './Hotp'
-import type OTP from './types'
+import { Otp } from './Otp'
+import { Hotp } from './Hotp'
+import type { OTP } from './types'
 
 
 /**
@@ -10,7 +10,7 @@ import type OTP from './types'
  *
  * - https://github.com/speakeasyjs/speakeasy
  */
-class Totp extends Otp
+export class Totp extends Otp
 {
 	static Period: OTP.TOTP.Period = 30
 
@@ -146,6 +146,3 @@ class Totp extends Otp
 		)
 	}
 }
-
-
-export default Totp

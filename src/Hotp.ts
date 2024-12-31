@@ -1,5 +1,5 @@
-import Otp from './Otp'
-import type OTP from './types'
+import { Otp } from './Otp'
+import type { OTP } from './types'
 
 
 /**
@@ -11,7 +11,7 @@ import type OTP from './types'
  * - https://en.wikipedia.org/wiki/HMAC-based_One-time_Password_Algorithm
  * - https://tools.ietf.org/html/rfc4226
  */
-class Hotp extends Otp
+export class Hotp extends Otp
 {
 	/**
 	 * Verify a HOTP token.
@@ -204,5 +204,3 @@ class Hotp extends Otp
 		)
 	}
 }
-
-export default Hotp

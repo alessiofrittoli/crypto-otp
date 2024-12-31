@@ -6,10 +6,10 @@ import { Base32, type Variant } from '@alessiofrittoli/crypto-encoder/Base32'
 import { Hmac, generateKey } from '@alessiofrittoli/crypto-key'
 import { padStart } from '@alessiofrittoli/math-utils/helpers'
 
-import type OTP from './types'
+import type { OTP } from './types'
 
 
-class Otp
+export class Otp
 {
 	static Digits: OTP.Digits = 6
 	static Encoding: OTP.Encoding = 'hex'
@@ -249,6 +249,3 @@ class Otp
 
 	}
 }
-
-
-export default Otp

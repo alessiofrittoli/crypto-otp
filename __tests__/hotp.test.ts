@@ -1,5 +1,5 @@
-import Hotp from '@/Hotp'
-import type OTP from '@/types'
+import { Hotp } from '@/Hotp'
+import type { OTP } from '@/types'
 
 const hexSecret		= 'DC0E3D9E461BC0341F6C451B848B312DE9537EB7'
 const base64Secret	= Buffer.from( hexSecret, 'hex' ).toString( 'base64url' )
