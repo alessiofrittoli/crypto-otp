@@ -1,4 +1,4 @@
-import type Algo from '@alessiofrittoli/crypto-algorithm/types'
+import type { Algo } from '@alessiofrittoli/crypto-algorithm/types'
 
 namespace OTP
 {

@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 import { format, type UrlObject } from 'url'
 
-import type Algo from '@alessiofrittoli/crypto-algorithm/types'
-import Base32, { type Variant } from '@alessiofrittoli/crypto-encoder/Base32'
+import type { Algo } from '@alessiofrittoli/crypto-algorithm/types'
+import { Base32, type Variant } from '@alessiofrittoli/crypto-encoder/Base32'
 import { Hmac, generateKey } from '@alessiofrittoli/crypto-key'
 import { padStart } from '@alessiofrittoli/math-utils/helpers'
 
