@@ -8,6 +8,9 @@ Version 0.1.0
 
 - [Getting started](#getting-started)
 - [One Time Passwords - API reference](#one-time-passwords---api-reference)
+	- [OTP Auth URL](#otp-auth-url)
+	- [HOTP](#hotp)
+	- [TOTP](#totp)
 - [Contributing](#contributing)
 - [Security](#security)
 - [Credits](#made-with-)
@@ -258,8 +261,6 @@ You can use the `Totp` "Static" Class to create or verify a TOTP Token.
 <details>
 
 <summary><code>Generate a token</code></summary>
-
-<!-- - See [OTP.TOTP.GetTokenOptions](#totp) for `Totp.GetToken()` options details. -->
 
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
