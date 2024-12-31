@@ -1,9 +1,12 @@
 /src
 /__tests__
 /docs
+/coverage
+/scripts
 
 /node_modules
 /.git
+/.github
 
 .gitignore
 .env.*

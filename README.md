@@ -8,6 +8,9 @@ Version 0.1.0
 
 - [Getting started](#getting-started)
 - [One Time Passwords - API reference](#one-time-passwords---api-reference)
+	- [OTP Auth URL](#otp-auth-url)
+	- [HOTP](#hotp)
+	- [TOTP](#totp)
 - [Contributing](#contributing)
 - [Security](#security)
 - [Credits](#made-with-)
@@ -54,7 +57,7 @@ You can optionally pass a string as the first and unique argument to the `Otp.Se
 ```ts
 import { Otp } from '@alessiofrittoli/crypto-otp'
 // or
-import Otp from '@alessiofrittoli/crypto-otp/Otp'
+import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const secret = Otp.Seed( '45385623' )
 ```
@@ -72,7 +75,7 @@ You can use the `Otp.GenerateSecretASCII()` static method to generate a random A
 ```ts
 import { Otp } from '@alessiofrittoli/crypto-otp'
 // or
-import Otp from '@alessiofrittoli/crypto-otp/Otp'
+import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const secret = Otp.GenerateSecretASCII()
 ```
@@ -89,7 +92,7 @@ You can use the `Otp.GetSecrets()` static method to retrieve the Secret Key in d
 ```ts
 import { Otp } from '@alessiofrittoli/crypto-otp'
 // or
-import Otp from '@alessiofrittoli/crypto-otp/Otp'
+import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const { hex, ascii, base64url, base32 } = Otp.GetSecrets( {
 	secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
@@ -111,7 +114,7 @@ To do so you need a OTP Auth URL which can be stored in a QR code.
 ```ts
 import { Hotp } from '@alessiofrittoli/crypto-otp'
 // or
-import Hotp from '@alessiofrittoli/crypto-otp/Hotp'
+import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
 
 const authUrl = Hotp.AuthURL( {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -122,7 +125,7 @@ const authUrl = Hotp.AuthURL( {
 ```ts
 import { Totp } from '@alessiofrittoli/crypto-otp'
 // or
-import Totp from '@alessiofrittoli/crypto-otp/Totp'
+import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 
 const authUrl = Totp.AuthURL( {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -153,8 +156,8 @@ You can use the `Hotp` "Static" Class to create or verify a HOTP Token.
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Hotp from '@alessiofrittoli/crypto-otp/Hotp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 
 const options: OTP.HOTP.GetTokenOptions = {
@@ -175,8 +178,8 @@ const token = Hotp.GetToken( options )
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Hotp from '@alessiofrittoli/crypto-otp/Hotp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -201,8 +204,8 @@ A HOTP is incremented on every usage. You should then stored the incremented cou
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Hotp from '@alessiofrittoli/crypto-otp/Hotp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -233,8 +236,8 @@ We could then offer to the user the possibility to synchorinze counters.
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Hotp from '@alessiofrittoli/crypto-otp/Hotp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -259,13 +262,11 @@ You can use the `Totp` "Static" Class to create or verify a TOTP Token.
 
 <summary><code>Generate a token</code></summary>
 
-<!-- - See [OTP.TOTP.GetTokenOptions](#totp) for `Totp.GetToken()` options details. -->
-
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Totp from '@alessiofrittoli/crypto-otp/Totp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetTokenOptions = {
 	secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
@@ -285,8 +286,8 @@ const token = Totp.GetToken( options )
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Totp from '@alessiofrittoli/crypto-otp/Totp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetDeltaOptions = {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -310,8 +311,8 @@ A TOTP is incremented every step time-step seconds. By default, the time-step is
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
 // or
-import Totp from '@alessiofrittoli/crypto-otp/Totp'
-import type OTP from '@alessiofrittoli/crypto-otp/types'
+import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
+import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetDeltaOptions = {
 	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },

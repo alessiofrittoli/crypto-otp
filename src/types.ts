@@ -1,6 +1,6 @@
-import type Algo from '@alessiofrittoli/crypto-algorithm/types'
+import type { Algo } from '@alessiofrittoli/crypto-algorithm/types'
 
-namespace OTP
+export namespace OTP
 {
 	export type Type		= 'hotp' | 'totp'
 	export type Digits		= 6 | 7 | 8
@@ -126,6 +126,3 @@ namespace OTP
 		}
 	}
 }
-
-
-export default OTP

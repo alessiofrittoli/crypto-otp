@@ -1,5 +1,7 @@
-import Otp from './Otp'
-import type OTP from './types'
+import { Exception } from '@alessiofrittoli/exception'
+import { ErrorCode } from '@alessiofrittoli/exception/code'
+import { Otp } from './Otp'
+import type { OTP } from './types'
 
 
 /**
@@ -11,7 +13,7 @@ import type OTP from './types'
  * - https://en.wikipedia.org/wiki/HMAC-based_One-time_Password_Algorithm
  * - https://tools.ietf.org/html/rfc4226
  */
-class Hotp extends Otp
+export class Hotp extends Otp
 {
 	/**
 	 * Verify a HOTP token.
@@ -38,9 +40,13 @@ class Hotp extends Otp
 	 */
 	static GetDelta( options: OTP.HOTP.GetDeltaOptions, twoSidedWindow: boolean = false )
 	{
-		let token: OTP.Token = options.token.toString()
+		let token: OTP.Token = ( options.token || '' ).toString()
 
-		if ( ! token ) throw new Error( 'No token has been provided.' )
+		if ( ! token ) {
+			throw new Exception( 'No token has been provided.', {
+				code: ErrorCode.EMPTY_VALUE,
+			} )
+		}
 
 		options.counter	||= 0
 		options.window	||= 0
@@ -204,5 +210,3 @@ class Hotp extends Otp
 		)
 	}
 }
-
-export default Hotp

@@ -1,5 +1,5 @@
-import Hotp from '@/Hotp'
-import type OTP from '@/types'
+import { Hotp } from '@/Hotp'
+import type { OTP } from '@/types'
 
 const hexSecret		= 'DC0E3D9E461BC0341F6C451B848B312DE9537EB7'
 const base64Secret	= Buffer.from( hexSecret, 'hex' ).toString( 'base64url' )
@@ -9,10 +9,10 @@ const base32Secret	= 'L5WNCK5A5SHCZNOIUTFHJ7GNCFWEGGY5'
 describe( 'Hotp.Get()', () => {
 
 	it( 'returns all details', () => {
+		// @ts-expect-error testing default values
 		const hotp = Hotp.Get( {
 			secret	: { key: hexSecret },
 			label	: 'Issuer:email@example.com',
-			counter	: 10,
 		} )
 
 		expect( 'code' in hotp ).toBe( true )
@@ -124,6 +124,31 @@ describe( 'Hotp.Counter()', () => {
 
 describe( 'Hotp.AuthURL()', () => {
 
+	it( 'uses default values for `counter` and `digits`', () => {
+		const secrets = Hotp.GetSecrets( {
+			secret: { key: hexSecret }
+		} )
+
+		// @ts-expect-error testing default values
+		const url = new URL( Hotp.AuthURL( {
+			label	: 'Issuer:example@email.com',
+			secret	: { key: hexSecret },
+			issuer	: 'Issuer',
+		} ) )
+		const params = url.searchParams		
+		
+		expect( url.protocol ).toBe( 'otpauth:' )
+		expect( url.host ).toBe( 'hotp' )
+		expect( url.pathname ).toBe( '/Issuer:example@email.com' )
+		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
+		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
+		expect( params.get( 'digits' ) ).toBe( '6' )
+		expect( params.get( 'counter' ) ).toBe( '0' )
+		expect( params.get( 'issuer' ) ).toBe( 'Issuer' )
+
+	} )
+
+
 	it( 'parses Auth URL correctly', () => {
 		const secrets = Hotp.GetSecrets( {
 			secret: { key: hexSecret }
@@ -201,18 +226,51 @@ describe( 'Hotp.GetDelta()', () => {
 	} )
 
 
-	it( 'throws a new Exception when no token is provided', () => {
-		let pass = false
+	it( 'sets default counter to 0', () => {
 
-		try {
+		expect(
+			Hotp.GetDelta( {
+				...options,
+				token: Hotp.GetToken( { ...options } )
+			} )
+		).toBe( 0 )
+		
+	} )
+
+
+	it( 'returns `null` if given token length is different than expected digits', () => {
+
+		expect(
+			Hotp.GetDelta( {
+				...options,
+				digits	: 8,
+				token	: Hotp.GetToken( { ...options, digits: 7 } )
+			} )
+		).toBe( null )
+		
+	} )
+
+
+	it( 'returns `null` if given token has non-numeric value', () => {
+
+		expect(
+			Hotp.GetDelta( {
+				...options,
+				digits	: 7,
+				token	: 'non-num'
+			} )
+		).toBe( null )
+		
+	} )
+
+
+	it( 'throws a new Exception when no token is provided', () => {
+
+		expect( () => {
 			// @ts-expect-error negative testing
 			Hotp.GetDelta( { ...options, counter: 8 } )
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		} catch ( error ) {
-			pass = true
-		}
-
-		expect( pass ).toBe( true )
+		} ).toThrow( 'No token has been provided.' )
+		
 	} )
 
 } )
@@ -287,7 +345,6 @@ describe( 'Hotp.ResolveOptions()', () => {
 
 	const options: OTP.HOTP.GetTokenOptions = {
 		secret	: { key: hexSecret },
-		counter	: 2,
 	}
 
 	it( 'resolves defaults options', () => {
@@ -307,7 +364,7 @@ describe( 'Hotp.ResolveOptions()', () => {
 		expect( secret.encoding ).toBe( 'hex' )
 
 		expect( resolved.digits ).toBe( 6 )
-		expect( resolved.counter ).toBe( 2 )
+		expect( resolved.counter ).toBe( 0 )
 	} )
 	
 } )
