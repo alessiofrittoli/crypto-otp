@@ -1,5 +1,5 @@
-export { default as Otp } from './Otp'
-export type { default as OTP } from './types'
+export { Otp } from './Otp'
+export type { OTP } from './types'
 
-export { default as Hotp } from './Hotp'
-export { default as Totp } from './Totp'
+export { Hotp } from './Hotp'
+export { Totp } from './Totp'
