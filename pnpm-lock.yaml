@@ -17,6 +17,9 @@ importers:
       '@alessiofrittoli/crypto-key':
         specifier: ^2.0.0
         version: 2.0.0
+      '@alessiofrittoli/exception':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@alessiofrittoli/math-utils':
         specifier: ^1.2.0
         version: 1.2.0
@@ -95,6 +98,9 @@ packages:
 
   '@alessiofrittoli/crypto-key@2.0.0':
     resolution: {integrity: sha512-Sx2GQi4Ajssl8P7UwxF84yKy1wbsr+qhumhuLKI0TUZYl2iAtmW5ELDKxOz/IgSlerAnIssvdhxMPy2EUm93nA==}
+
+  '@alessiofrittoli/exception@2.0.0':
+    resolution: {integrity: sha512-472IItTO3pp8AC1LvmKvGGNsDC0LVJO20jvre/+0hk3Pabqq6O8af0rX3wEjYkDbCG/v3UakJHeZ4dxjeXC09Q==}
 
   '@alessiofrittoli/math-utils@1.2.0':
     resolution: {integrity: sha512-Iyk8nIijNhmhcekZ+2aISwcLXKR219OCv8ngmDGAjlHOp4gWyTN7+2hvN8Bw0wUOkIe0QdKDyBLne84xIQAhxg==}
@@ -2463,6 +2469,8 @@ snapshots:
     dependencies:
       '@alessiofrittoli/crypto-algorithm': 2.0.0
       '@alessiofrittoli/crypto-buffer': 3.2.0
+
+  '@alessiofrittoli/exception@2.0.0': {}
 
   '@alessiofrittoli/math-utils@1.2.0': {}
 

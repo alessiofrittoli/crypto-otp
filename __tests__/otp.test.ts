@@ -10,6 +10,14 @@ describe( 'Otp.Seed()', () => {
 
 	it( 'generates a 20 bytes HMAC-SHA-1 HEX secret', () => {
 		
+		expect( Otp.Seed().length )
+			.toBe( 40 )
+		
+	} )
+
+
+	it( 'generates a 20 bytes HMAC-SHA-1 HEX secret with a given input', () => {
+		
 		expect( Otp.Seed( sn ).length )
 			.toBe( 40 )
 		
