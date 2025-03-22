@@ -1,6 +1,21 @@
 # Crypto OTP 🟢
 
-Version 1.0.1
+[![NPM Latest Version][version-badge]][npm-url] [![Coverage Status][coverage-badge]][coverage-url] [![Socket Status][socket-badge]][socket-url] [![NPM Monthly Downloads][downloads-badge]][npm-url] [![Dependencies][deps-badge]][deps-url]
+
+[![GitHub Sponsor][sponsor-badge]][sponsor-url]
+
+[version-badge]: https://img.shields.io/npm/v/%40alessiofrittoli%2Fcrypto-otp
+[npm-url]: https://npmjs.org/package/%40alessiofrittoli%2Fcrypto-otp
+[coverage-badge]: https://coveralls.io/repos/github/alessiofrittoli/crypto-otp/badge.svg
+[coverage-url]: https://coveralls.io/github/alessiofrittoli/crypto-otp
+[socket-badge]: https://socket.dev/api/badge/npm/package/@alessiofrittoli/crypto-otp
+[socket-url]: https://socket.dev/npm/package/@alessiofrittoli/crypto-otp/overview
+[downloads-badge]: https://img.shields.io/npm/dm/%40alessiofrittoli%2Fcrypto-otp.svg
+[deps-badge]: https://img.shields.io/librariesio/release/npm/%40alessiofrittoli%2Fcrypto-otp
+[deps-url]: https://libraries.io/npm/%40alessiofrittoli%2Fcrypto-otp
+
+[sponsor-badge]: https://img.shields.io/static/v1?label=Fund%20this%20package&message=%E2%9D%A4&logo=GitHub&color=%23DB61A2
+[sponsor-url]: https://github.com/sponsors/alessiofrittoli
 
 ## Lightweight TypeScript HOTP/TOTP library
 
@@ -8,9 +23,12 @@ Version 1.0.1
 
 - [Getting started](#getting-started)
 - [One Time Passwords - API reference](#one-time-passwords---api-reference)
-	- [OTP Auth URL](#otp-auth-url)
-	- [HOTP](#hotp)
-	- [TOTP](#totp)
+  - [OTP Auth URL](#otp-auth-url)
+  - [HOTP](#hotp)
+  - [TOTP](#totp)
+- [Development](#development)
+  - [ESLint](#eslint)
+  - [Jest](#jest)
 - [Contributing](#contributing)
 - [Security](#security)
 - [Credits](#made-with-)
@@ -48,7 +66,7 @@ Both consist of a short token of 6/7/8 digits number but the relying on a differ
 
 <details>
 
-<summary><code>HMAC-SHA-1 HEX Secret Key</code></summary>
+<summary>HMAC-SHA-1 HEX Secret Key</summary>
 
 You can use the `Otp.Seed()` static method to generate a 20 bytes (160 bits) HMAC-SHA-1 HEX Secret Key.
 
@@ -64,9 +82,11 @@ const secret = Otp.Seed( '45385623' )
 
 </details>
 
+---
+
 <details>
 
-<summary><code>ASCII Secret Key</code></summary>
+<summary>ASCII Secret Key</summary>
 
 You can use the `Otp.GenerateSecretASCII()` static method to generate a random ASCII Secret Key.
 
@@ -82,9 +102,11 @@ const secret = Otp.GenerateSecretASCII()
 
 </details>
 
+---
+
 <details>
 
-<summary><code>Obtain the Secret Key in a different supported encoding</code></summary>
+<summary>Obtain the Secret Key in a different supported encoding</summary>
 
 Sometimes you need your Secret Key in a different encoding (e.g. `base32` required for adding the credential to an Authenticator App).
 You can use the `Otp.GetSecrets()` static method to retrieve the Secret Key in different encodings.
@@ -95,7 +117,7 @@ import { Otp } from '@alessiofrittoli/crypto-otp'
 import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const { hex, ascii, base64url, base32 } = Otp.GetSecrets( {
-	secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
+    secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
 } )
 ```
 
@@ -117,8 +139,8 @@ import { Hotp } from '@alessiofrittoli/crypto-otp'
 import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
 
 const authUrl = Hotp.AuthURL( {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	label	: 'The issuer:account@name.com',
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  label   : 'The issuer:account@name.com',
 } )
 ```
 
@@ -128,8 +150,8 @@ import { Totp } from '@alessiofrittoli/crypto-otp'
 import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 
 const authUrl = Totp.AuthURL( {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	label	: 'The issuer:account@name.com',
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  label   : 'The issuer:account@name.com',
 } )
 ```
 
@@ -149,7 +171,7 @@ You can use the `Hotp` "Static" Class to create or verify a HOTP Token.
 
 <details>
 
-<summary><code>Generate a token</code></summary>
+<summary>Generate a token</summary>
 
 - See [OTP.HOTP.GetTokenOptions](#hotpgettoken-options) for `HOTP.GetToken` options details.
 
@@ -161,7 +183,7 @@ import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 
 const options: OTP.HOTP.GetTokenOptions = {
-	secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
+  secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
 }
 
 const token = Hotp.GetToken( options )
@@ -169,9 +191,11 @@ const token = Hotp.GetToken( options )
 
 </details>
 
+---
+
 <details>
 
-<summary><code>Verify a token</code></summary>
+<summary>Verify a token</summary>
 
 - See [OTP.HOTP.GetDeltaOptions](#hotpverifyhotpgetdelta-options) for `Hotp.Verify()` options details.
 
@@ -182,10 +206,10 @@ import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
 import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	token	: token, // The token provided by the user.
-	digits	: digits,
-	counter	: counter, // The counter should be stored in a database and incremented on each credential verification.
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  token   : token, // The token provided by the user.
+  digits  : digits,
+  counter : counter, // The counter should be stored in a database and incremented on each credential verification.
 }
 
 const valid = Hotp.Verify( options ) // true | false
@@ -193,9 +217,11 @@ const valid = Hotp.Verify( options ) // true | false
 
 </details>
 
+---
+
 <details>
 
-<summary><code>Calculate delta</code></summary>
+<summary>Calculate delta</summary>
 
 A HOTP is incremented on every usage. You should then stored the incremented counter in a database for future verifications.
 
@@ -208,25 +234,26 @@ import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
 import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	token	: token,		// The token provided by the user.
-	counter	: counter + 1,	// The stored counter value in the database + 1.
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  token   : token,        // The token provided by the user.
+  counter : counter + 1,  // The stored counter value in the database + 1.
 }
 
 /**
  * Returns `0` where the delta is the counter difference between the given token and the current counter + 1.
- * If `null` the given token is not valid and should not be accepted.
- * 
- */
+  * If `null` the given token is not valid and should not be accepted.
+  * 
+  */
 const delta = Hotp.GetDelta( options )
 ```
 
 </details>
 
+---
 
 <details>
 
-<summary><code>Synchronize server counter</code></summary>
+<summary>Synchronize server counter</summary>
 
 If the HOTP token is generated multiple times without server validation or if the token is being used on different applications (not recommended but is up to the user what to do with his tokens), the client counter could be different (higher) than the counter stored in the server database.
 This will lead in synchronization mismatch and unwanted token rejects.
@@ -240,14 +267,14 @@ import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
 import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	token	: token, // The token provided by the user.
-	window	: 500,
-	counter	: counterStoredInDatabase,
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  token   : token, // The token provided by the user.
+  window  : 500,
+  counter : counterStoredInDatabase,
 }
 
-const delta		= Hotp.GetDelta( options )
-const counter	= options.counter // if delta is `null`, store the counter and use it in the next attempt.
+const delta   = Hotp.GetDelta( options )
+const counter = options.counter // if delta is `null`, store the counter and use it in the next attempt.
 ```
 
 </details>
@@ -260,7 +287,7 @@ You can use the `Totp` "Static" Class to create or verify a TOTP Token.
 
 <details>
 
-<summary><code>Generate a token</code></summary>
+<summary>Generate a token</summary>
 
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
@@ -269,7 +296,7 @@ import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetTokenOptions = {
-	secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
+  secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
 }
 
 const token = Totp.GetToken( options )
@@ -277,9 +304,11 @@ const token = Totp.GetToken( options )
 
 </details>
 
+---
+
 <details>
 
-<summary><code>Verify a token</code></summary>
+<summary>Verify a token</summary>
 
 - See [OTP.TOTP.GetDeltaOptions](#totpverifytotpgetdelta-options) for `Totp.Verify()` options details.
 
@@ -290,9 +319,9 @@ import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetDeltaOptions = {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	token	: token, // The token provided by the user.
-	digits	: digits,
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  token   : token, // The token provided by the user.
+  digits  : digits,
 }
 
 const valid = Totp.Verify( options ) // true | false
@@ -300,9 +329,11 @@ const valid = Totp.Verify( options ) // true | false
 
 </details>
 
+---
+
 <details>
 
-<summary><code>Calculate delta</code></summary>
+<summary>Calculate delta</summary>
 
 A TOTP is incremented every step time-step seconds. By default, the time-step is 30 seconds. You may change the time-step using the `period` option, with units in seconds.
 
@@ -315,16 +346,16 @@ import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetDeltaOptions = {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	token	: token,	// The token provided by the user.
-	period	: 60,		// Must be the same to the `period` value used while generating the token.
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  token   : token,  // The token provided by the user.
+  period  : 60,     // Must be the same to the `period` value used while generating the token.
 }
 
 /**
  * Returns `0` where the delta is the time step difference between the given token and the current time.
- * If `null` the given token is not valid and should not be accepted.
- * 
- */
+  * If `null` the given token is not valid and should not be accepted.
+  * 
+  */
 const delta = Totp.GetDelta( options )
 ```
 
@@ -338,16 +369,16 @@ The allowable margin for the counter. The function will check codes in the futur
 
 <details>
 
-<summary><code>Specifying a window for verifying HOTP (example)</code></summary>
+<summary>Specifying a window for verifying HOTP (example)</summary>
 
 Verify a HOTP token with counter value 42 and a window of 10. HOTP has a one-sided window, so this will check counter values from 42 to 52, inclusive, and return a delta number representing the difference between the given counter value and the counter position at which the token was found, or `null` if it was not found within the window.
 
 ```ts
 const options: OTP.HOTP.GetDeltaOptions = {
-	secret	: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-	counter	: 42,
-	token	: '474687',
-	window	: 10,
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  counter : 42,
+  token   : '474687',
+  window  : 10,
 }
 
 const delta = Hotp.GetDelta( options ) // 6
@@ -355,10 +386,11 @@ const delta = Hotp.GetDelta( options ) // 6
 
 </details>
 
+---
 
 <details>
 
-<summary><code>Specifying a window for verifying TOTP (example)</code></summary>
+<summary>Specifying a window for verifying TOTP (example)</summary>
 
 Verify a TOTP token at the current time with a window of 2. Since the default time step is 30 seconds, and TOTP has a two-sided window, this will check tokens between [current time minus two tokens before] and [current time plus two tokens after]. In other words, with a time step of 30 seconds, it will check the token at the current time, plus the tokens at the current time minus 30 seconds, minus 60 seconds, plus 30 seconds, and plus 60 seconds – basically, it will check tokens between a minute ago and a minute from now. It will return a delta number representing the difference between the current time step and the counter position at which the token was found, or `null` if it was not found within the window.
 
@@ -369,18 +401,18 @@ const time2 = time1 + 60 // 1717993260
 
 /**
  * By way of example, we will force TOTP to return tokens at time `time1` and
- * at time `time2` (60 seconds ahead, or 2 steps ahead).
- */
+  * at time `time2` (60 seconds ahead, or 2 steps ahead).
+  */
 const token1 = Totp.GetToken( { secret, time: time1 } ) // 289254
 const token2 = Totp.GetToken( { secret, time: time2 } ) // 345152
 
 /**
  * We can check the time at token 2, with token 1, but use a window of 2.
- * With a time step of 30 seconds, this will check all tokens from 60 seconds before the time to 60 seconds after the time.
- * 
- * The following example will return `-2`. This signifies that the given token, token1, is -2 steps away from the given time,
- * which means that it is the token for the value at (-2 * time step) = (-2 * 30 seconds) = 60 seconds ago.
- */
+  * With a time step of 30 seconds, this will check all tokens from 60 seconds before the time to 60 seconds after the time.
+  * 
+  * The following example will return `-2`. This signifies that the given token, token1, is -2 steps away from the given time,
+  * which means that it is the token for the value at (-2 * time step) = (-2 * 30 seconds) = 60 seconds ago.
+  */
 const delta = Totp.GetDelta( { secret, token: token1, window: 2, time: time2 } )
 ```
 
@@ -447,8 +479,6 @@ Other inherited parameters from [`HOTP.AuthURLOptions`](#hotpauthurl-options).
 
 ---
 
-<!-- ---
-
 ### Development
 
 #### Install depenendencies
@@ -463,9 +493,9 @@ or using `pnpm`
 pnpm i
 ```
 
-#### Build your source code
+#### Build the source code
 
-Run the following command to build code for distribution.
+Run the following command to test and build code for distribution.
 
 ```bash
 pnpm build
@@ -485,31 +515,35 @@ Run all the defined test suites by running the following:
 
 ```bash
 # Run tests and watch file changes.
-pnpm test
-
-# Run tests and watch file changes with jest-environment-jsdom.
-pnpm test:jsdom
+pnpm test:watch
 
 # Run tests in a CI environment.
 pnpm test:ci
-
-# Run tests in a CI environment with jest-environment-jsdom.
-pnpm test:ci:jsdom
 ```
 
-You can eventually run specific suits like so:
+- See [`package.json`](./package.json) file scripts for more info.
+
+Run tests with coverage.
+
+An HTTP server is then started to serve coverage files from `./coverage` folder.
+
+⚠️ You may see a blank page the first time you run this command. Simply refresh the browser to see the updates.
 
 ```bash
-pnpm test:jest
-pnpm test:jest:jsdom
+test:coverage:serve
 ```
 
---- -->
+---
 
 ### Contributing
 
-Contributions are truly welcome!\
+Contributions are truly welcome!
+
 Please refer to the [Contributing Doc](./CONTRIBUTING.md) for more information on how to start contributing to this project.
+
+Help keep this project up to date with [GitHub Sponsor][sponsor-url].
+
+[![GitHub Sponsor][sponsor-badge]][sponsor-url]
 
 ---
 
@@ -520,30 +554,30 @@ If you believe you have found a security vulnerability, we encourage you to **_r
 ### Made with ☕
 
 <table style='display:flex;gap:20px;'>
-	<tbody>
-		<tr>
-			<td>
-				<img src='https://avatars.githubusercontent.com/u/35973186' style='width:60px;border-radius:50%;object-fit:contain;'>
-			</td>
-			<td>
-				<table style='display:flex;gap:2px;flex-direction:column;'>
-					<tbody>
-						<tr>
-							<td>
-								<a href='https://github.com/alessiofrittoli' target='_blank' rel='noopener'>Alessio Frittoli</a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<small>
-									<a href='https://alessiofrittoli.it' target='_blank' rel='noopener'>https://alessiofrittoli.it</a> |
-									<a href='mailto:info@alessiofrittoli.it' target='_blank' rel='noopener'>info@alessiofrittoli.it</a>
-								</small>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr>
+      <td>
+        <img alt="avatar" src='https://avatars.githubusercontent.com/u/35973186' style='width:60px;border-radius:50%;object-fit:contain;'>
+      </td>
+      <td>
+        <table style='display:flex;gap:2px;flex-direction:column;'>
+          <tbody>
+              <tr>
+                <td>
+                  <a href='https://github.com/alessiofrittoli' target='_blank' rel='noopener'>Alessio Frittoli</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <small>
+                    <a href='https://alessiofrittoli.it' target='_blank' rel='noopener'>https://alessiofrittoli.it</a> |
+                    <a href='mailto:info@alessiofrittoli.it' target='_blank' rel='noopener'>info@alessiofrittoli.it</a>
+                  </small>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
 </table>
