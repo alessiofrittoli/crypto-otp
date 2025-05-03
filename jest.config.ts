@@ -1,6 +1,19 @@
 import type { JestConfigWithTsJest } from 'ts-jest'
 import dotenv from 'dotenv'
 
+console.log(
+`
+________________________________________________________________
+       ______                 __           ____  __________
+      / ____/______  ______  / /_____     / __ \\/_  __/ __ \\
+     / /   / ___/ / / / __ \\/ __/ __ \\   / / / / / / / /_/ /
+    / /___/ /  / /_/ / /_/ / /_/ /_/ /  / /_/ / / / / ____/
+    \\____/_/   \\__, / .___/\\__/\\____/   \\____/ /_/ /_/
+              /____/_/
+________________________________________________________________
+`
+)
+
 const env = process.env.NODE_ENV
 
 dotenv.config( { path: [
@@ -19,7 +32,7 @@ const config: JestConfigWithTsJest = {
 	/** https://jestjs.io/docs/configuration#testenvironment-string */
 	testEnvironment: 'node',
 	moduleDirectories: [ 'node_modules', '<rootDir>/' ],
-	testMatch: [ '**/__tests__/**/*.test.ts' ],
+	testMatch: [ '**/__tests__/**/*.(test|spec).ts' ],
 	/**
 	 * If you're using [Module Path Aliases](https://nextjs.org/docs/advanced-features/module-path-aliases),
 	 * you will have to add the moduleNameMapper in order for jest to resolve your absolute paths.
