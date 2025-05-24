@@ -363,6 +363,26 @@ const delta = Totp.GetDelta( options )
 
 ---
 
+<details>
+
+<summary>Get next tick Date</summary>
+
+If you need to display a counter indicating the remaining time for the TOTP validity you may need to know when the previous generated TOTP code will change.
+
+To do so you can use the `Totp.NextTick()` method which returns the `Date` object representing the next time tick for a TOTP counter.
+
+```ts
+import { Totp } from '@alessiofrittoli/crypto-otp'
+// or
+import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
+
+const date = Totp.NextTick()
+```
+
+</details>
+
+---
+
 #### Window
 
 The allowable margin for the counter. The function will check codes in the future against the provided passcode, e.g. if window = 10, and counter = 5, this function will check the passcode against all One Time Passcodes between (counter - window) and (counter + window), inclusive.
