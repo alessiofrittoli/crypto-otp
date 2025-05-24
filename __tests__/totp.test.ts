@@ -5,6 +5,9 @@ const hexSecret		= 'DC0E3D9E461BC0341F6C451B848B312DE9537EB7'
 const base64Secret	= Buffer.from( hexSecret, 'hex' ).toString( 'base64url' )
 const base32Secret	= 'L5WNCK5A5SHCZNOIUTFHJ7GNCFWEGGY5'
 
+/**
+ * ⚠️ in the following unit tests we are required to pass a static `time` so we can statically check results. ⚠️
+ */
 
 describe( 'Totp.Get()', () => {
 
@@ -166,6 +169,25 @@ describe( 'Totp.Counter()', () => {
 		expect( counter1 ).not.toBe( counter2 )
 	} )
 	
+} )
+
+
+describe( 'Totp.NextTick()', () => {	
+	
+	it( 'returns the next Date object when the counter will be updated', () => {
+
+		expect( Totp.NextTick() )
+			.toBeInstanceOf( Date )
+		
+		const date		= new Date( '2024-12-13T16:00:00.000Z' )
+		const time		= date.getTime() / 1000
+		const expected	= new Date( date.getTime() + ( Totp.Period * 1000 ) )
+
+		expect( Totp.NextTick( { time } ).getTime() )
+			.toBe( expected.getTime() )
+			
+	} )
+
 } )
 
 
