@@ -4,6 +4,7 @@ const hexSecret		= 'DC0E3D9E461BC0341F6C451B848B312DE9537EB7'
 const base64Secret	= Buffer.from( hexSecret, 'hex' ).toString( 'base64url' )
 const base32Secret	= 'IRBTARJTIQ4UKNBWGFBEGMBTGQYUMNSGIVJA===='
 
+
 describe( 'Otp.Seed()', () => {
 
 	const sn = '12345678'
@@ -35,7 +36,7 @@ describe( 'Otp.Seed()', () => {
 
 
 describe( 'Otp.GenerateSecretASCII()', () => {
-
+	
 	it( 'produces always a unique result', () => {
 		
 		expect( Otp.GenerateSecretASCII() )
@@ -97,7 +98,7 @@ describe( 'Otp.createDigest()', () => {
 
 
 describe( 'Otp.DigestToToken()', () => {
-
+	
 	const zeroCounterDigest = Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '0' )
 
 	it( 'generates a 6 digits token', () => {
@@ -135,6 +136,20 @@ describe( 'Otp.DigestToToken()', () => {
 			Otp.DigestToToken( Otp.createDigest( 'SHA-256', Otp.HmacKey( hexSecret, 'hex' ), '11' ) )
 		)
 		expect( token1 ).not.toBe( token2 )
+	} )
+
+
+	it( 'handles empty input buffers', () => {
+
+		expect( Otp.DigestToToken( Buffer.from( '' ) ) )
+			.toBe( '000000' )
+			
+		expect( Otp.DigestToToken( Buffer.from( '' ), 7 ) )
+			.toBe( '0000000' )
+		
+		expect( Otp.DigestToToken( Buffer.from( '' ), 8 ) )
+			.toBe( '00000000' )
+
 	} )
 
 } )

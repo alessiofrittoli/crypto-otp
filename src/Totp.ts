@@ -40,10 +40,12 @@ export class Totp extends Otp
 	 */
 	static GetDelta( options: OTP.TOTP.GetDeltaOptions )
 	{
-		options.counter ??= Totp.Counter( options )
+		const {
+			counter = Totp.Counter( options ), ...rest
+		} = options
 
 		return (
-			Hotp.GetDelta( options, true )
+			Hotp.GetDelta( { ...rest, counter }, true )
 		)
 	}
 
@@ -56,20 +58,14 @@ export class Totp extends Otp
 	 */
 	static Get( options: OTP.TOTP.GetTokenOptions & Omit<OTP.AuthURLOptions<'totp'>, 'type'> )
 	{
-		options.counter ??= Totp.Counter( options )
+		const _options = Totp.ResolveOptions( options )
 
 		return (
 			{
-				code		: Hotp.GetToken( options ),
-				counter		: options.counter,
-				time		: options.time!,
-				period		: options.period,
-				epoch		: options.epoch,
-				window		: options.window,
-				authUrl		: Totp.AuthURL( options ),
-				digits		: options.digits,
-				secret		: options.secret,
-				secrets		: Totp.GetSecrets( options ),
+				code		: Hotp.GetToken( _options ),
+				authUrl		: Totp.AuthURL( _options ),
+				secrets		: Totp.GetSecrets( _options ),
+				..._options,
 			}
 		)
 		
@@ -102,15 +98,25 @@ export class Totp extends Otp
 		T extends OTP.TOTP.CounterOptions & OTP.TOTP.GetTokenOptions
 	>( options: T )
 	{
-		options.secret.algorithm||= Totp.Algorithm
-		options.secret.encoding	||= Totp.Encoding
-		options.digits			||= Totp.Digits
-		options.counter 		??= Totp.Counter( options )
-		options.period			||= Totp.Period
-		options.time			??= ( Date.now() / 1000 )
-		options.epoch			??= 0
+		const {
+			secret: {
+				key,
+				algorithm	= Totp.Algorithm,
+				encoding	= Totp.Encoding
+			},
+			counter	= Totp.Counter( options ),
+			digits	= Totp.Digits,
+			period	= Totp.Period,
+			time	= Date.now() / 1000,
+			epoch	= 0,
+			window	= 0,
+		} = options
 
-		return options as NonNullableFields<DeepFull<T>>
+		return {
+			...options,
+			secret: { key, algorithm, encoding },
+			counter, digits, period, time, epoch, window,
+		} as NonNullableFields<DeepFull<T>>
 	}
 
 
@@ -124,15 +130,14 @@ export class Totp extends Otp
 	 */
 	static Counter( options: OTP.TOTP.CounterOptions = {} )
 	{
-		options.period	||= Totp.Period
-		options.time	??= ( Date.now() / 1000 )
-		options.epoch	??= 0
+		const {
+			period = Totp.Period, time = Date.now() / 1000, epoch = 0,
+		} = options
 
-		const step	= options.period
-		const time	= options.time * 1000
-		const epoch	= options.epoch * 1000
+		const _time		= time * 1000
+		const _epoch	= epoch * 1000
 	
-		return Math.floor( ( time - epoch ) / step / 1000 )
+		return Math.floor( ( _time - _epoch ) / period / 1000 )
 	}
 
 
@@ -145,14 +150,13 @@ export class Totp extends Otp
 	 */
 	static NextTick( options: OTP.TOTP.CounterOptions = {} )
 	{
-		options.period	||= Totp.Period
-		options.time	??= ( Date.now() / 1000 )
-		options.epoch	??= 0
+		const {
+			period = Totp.Period, epoch = 0, ...rest
+		} = options
 
-		const step		= options.period
-		const epoch		= options.epoch * 1000
-		const counter	= Totp.Counter( options )
-		const nextTick	= epoch + ( counter + 1 ) * step * 1000
+		const _epoch	= epoch * 1000
+		const counter	= Totp.Counter( { period, epoch, ...rest } )
+		const nextTick	= _epoch + ( counter + 1 ) * period * 1000
 
 		return new Date( nextTick )
 	}

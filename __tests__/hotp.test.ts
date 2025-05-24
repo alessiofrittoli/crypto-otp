@@ -12,15 +12,28 @@ describe( 'Hotp.Get()', () => {
 		// @ts-expect-error testing default values
 		const hotp = Hotp.Get( {
 			secret	: { key: hexSecret },
-			label	: 'Issuer:email@example.com',
+			label	: 'email@example.com',
+			issuer	: 'Issuer',
 		} )
 
-		expect( 'code' in hotp ).toBe( true )
-		expect( 'counter' in hotp ).toBe( true )
-		expect( 'authUrl' in hotp ).toBe( true )
-		expect( 'digits' in hotp ).toBe( true )
-		expect( 'secret' in hotp ).toBe( true )
-		expect( 'secrets' in hotp ).toBe( true )
+		expect( hotp.code ).toBe( '522465' ) // this may fail if secret changes
+		expect( hotp.counter ).toBe( 0 )
+		expect( hotp.digits ).toBe( 6 )
+		expect( hotp.label ).toBe( 'email@example.com' )
+		expect( hotp.issuer ).toBe( 'Issuer' )
+		expect( hotp.authUrl ).toBe( 'otpauth://hotp/email@example.com?secret=3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX&algorithm=SHA1&digits=6&issuer=Issuer&counter=0' )
+		expect( hotp.secret ).toEqual( {
+			key			: hexSecret,
+        	algorithm	: 'SHA-1',
+        	encoding	: 'hex'
+		} )
+		expect( hotp.secrets ).toEqual( {
+			ascii		: '\\\x0E=\x1EF\x1B@4\x1FlE\x1B\x04\x0B1-iS~7',
+			hex			: hexSecret,
+			base64url	: '3A49nkYbwDQfbEUbhIsxLelTfrc',
+			base32		: '3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX'
+      	} )
+
 	} )
 	
 } )
@@ -131,7 +144,7 @@ describe( 'Hotp.AuthURL()', () => {
 
 		// @ts-expect-error testing default values
 		const url = new URL( Hotp.AuthURL( {
-			label	: 'Issuer:example@email.com',
+			label	: 'example@email.com',
 			secret	: { key: hexSecret },
 			issuer	: 'Issuer',
 		} ) )
@@ -139,7 +152,7 @@ describe( 'Hotp.AuthURL()', () => {
 		
 		expect( url.protocol ).toBe( 'otpauth:' )
 		expect( url.host ).toBe( 'hotp' )
-		expect( url.pathname ).toBe( '/Issuer:example@email.com' )
+		expect( url.pathname ).toBe( '/example@email.com' )
 		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
 		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
 		expect( params.get( 'digits' ) ).toBe( '6' )
@@ -155,7 +168,7 @@ describe( 'Hotp.AuthURL()', () => {
 		} )
 
 		const url = new URL( Hotp.AuthURL( {
-			label	: 'Issuer:example@email.com',
+			label	: 'example@email.com',
 			digits	: 8,
 			counter	: 10,
 			secret	: { key: hexSecret },
@@ -165,7 +178,7 @@ describe( 'Hotp.AuthURL()', () => {
 		
 		expect( url.protocol ).toBe( 'otpauth:' )
 		expect( url.host ).toBe( 'hotp' )
-		expect( url.pathname ).toBe( '/Issuer:example@email.com' )
+		expect( url.pathname ).toBe( '/example@email.com' )
 		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
 		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
 		expect( params.get( 'digits' ) ).toBe( '8' )

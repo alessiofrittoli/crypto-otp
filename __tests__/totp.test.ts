@@ -12,21 +12,35 @@ const base32Secret	= 'L5WNCK5A5SHCZNOIUTFHJ7GNCFWEGGY5'
 describe( 'Totp.Get()', () => {
 
 	it( 'returns all details', () => {
+
 		const totp = Totp.Get( {
 			secret	: { key: hexSecret },
-			label	: 'Issuer:email@example.com',
+			label	: 'email@example.com',
+			issuer	: 'Issuer',
 		} )
 
-		expect( 'code' in totp ).toBe( true )
-		expect( 'counter' in totp ).toBe( true )
+		expect( totp.code ).toBe( Totp.GetToken( { secret: { key: hexSecret }, } ) )
+		expect( totp.counter ).toBe( Totp.Counter() )
+		expect( totp.digits ).toBe( 6 )
+		expect( totp.window ).toBe( 0 )
+		expect( totp.epoch ).toBe( 0 )
+		expect( totp.period ).toBe( 30 )
 		expect( 'time' in totp ).toBe( true )
-		expect( 'period' in totp ).toBe( true )
-		expect( 'epoch' in totp ).toBe( true )
-		expect( 'window' in totp ).toBe( true )
-		expect( 'authUrl' in totp ).toBe( true )
-		expect( 'digits' in totp ).toBe( true )
-		expect( 'secret' in totp ).toBe( true )
-		expect( 'secrets' in totp ).toBe( true )
+		expect( totp.label ).toBe( 'email@example.com' )
+		expect( totp.issuer ).toBe( 'Issuer' )
+		expect( totp.authUrl ).toBe( 'otpauth://totp/email@example.com?secret=3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX&algorithm=SHA1&digits=6&issuer=Issuer&period=30' )
+		expect( totp.secret ).toEqual( {
+			key			: hexSecret,
+			algorithm	: 'SHA-1',
+			encoding	: 'hex'
+		} )
+		expect( totp.secrets ).toEqual( {
+			ascii		: '\\\x0E=\x1EF\x1B@4\x1FlE\x1B\x04\x0B1-iS~7',
+			hex			: hexSecret,
+			base64url	: '3A49nkYbwDQfbEUbhIsxLelTfrc',
+			base32		: '3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX'
+		} )
+
 	} )
 
 } )
@@ -202,7 +216,7 @@ describe( 'Totp.AuthURL()', () => {
 		} )
 
 		const url = new URL( Totp.AuthURL( {
-			label	: 'Issuer:example@email.com',
+			label	: 'example@email.com',
 			digits	: 8,
 			counter	: counter,
 			period	: 60,
@@ -213,7 +227,7 @@ describe( 'Totp.AuthURL()', () => {
 		
 		expect( url.protocol ).toBe( 'otpauth:' )
 		expect( url.host ).toBe( 'totp' )
-		expect( url.pathname ).toBe( '/Issuer:example@email.com' )
+		expect( url.pathname ).toBe( '/example@email.com' )
 		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
 		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
 		expect( params.get( 'digits' ) ).toBe( '8' )
