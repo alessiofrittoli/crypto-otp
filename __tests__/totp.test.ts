@@ -149,6 +149,12 @@ describe( 'Totp.GetToken()', () => {
 
 describe( 'Totp.Counter()', () => {
 
+	it( 'generates a counter based on current Date timestamp', () => {
+		expect( Totp.Counter() )
+			.toBeGreaterThan( 0 )
+	} )
+
+
 	it( 'generates a different counter for different time spans', () => {
 		const counter1 = Totp.Counter( {
 			time: new Date( '2024-12-13T16:00:00.000Z' ).getTime() / 1000
