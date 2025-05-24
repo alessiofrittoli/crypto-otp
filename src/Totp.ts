@@ -12,7 +12,12 @@ import type { OTP } from './types'
  */
 export class Totp extends Otp
 {
+	/**
+	 * The TOTP default period.
+	 * 
+	 */
 	static Period: OTP.TOTP.Period = 30
+
 
 	/**
 	 * Verify a TOTP token.
@@ -128,6 +133,28 @@ export class Totp extends Otp
 		const epoch	= options.epoch * 1000
 	
 		return Math.floor( ( time - epoch ) / step / 1000 )
+	}
+
+
+	
+	/**
+	 * Calculates the Date object representing the next time tick for a TOTP counter.
+	 *
+	 * @param	options The TOTP counter options. @see {@link OTP.TOTP.CounterOptions}
+	 * @returns A `Date` object representing the start of the next TOTP time step.
+	 */
+	static NextTick( options: OTP.TOTP.CounterOptions = {} )
+	{
+		options.period	||= Totp.Period
+		options.time	??= ( Date.now() / 1000 )
+		options.epoch	??= 0
+
+		const step		= options.period
+		const epoch		= options.epoch * 1000
+		const counter	= Totp.Counter( options )
+		const nextTick	= epoch + ( counter + 1 ) * step * 1000
+
+		return new Date( nextTick )
 	}
 
 
