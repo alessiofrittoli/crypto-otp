@@ -117,7 +117,7 @@ export class Totp extends Otp
 	 * @param	options The TOTP counter options. @see {@link OTP.TOTP.CounterOptions}
 	 * @returns	The calculated counter value.
 	 */
-	static Counter( options: OTP.TOTP.CounterOptions )
+	static Counter( options: OTP.TOTP.CounterOptions = {} )
 	{
 		options.period	||= Totp.Period
 		options.time	??= ( Date.now() / 1000 )
