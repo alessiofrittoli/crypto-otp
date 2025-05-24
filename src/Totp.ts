@@ -80,10 +80,12 @@ export class Totp extends Otp
 	 */
 	static GetToken( options: OTP.TOTP.GetTokenOptions )
 	{
-		options.counter ??= Totp.Counter( options )
+		const {
+			counter = Totp.Counter( options ), ...rest
+		} = options
 
 		return (
-			Hotp.GetToken( options )
+			Hotp.GetToken( { ...rest, counter } )
 		)
 	}
 
@@ -95,7 +97,11 @@ export class Totp extends Otp
 	 * @returns A non nullable options object.
 	 */
 	static ResolveOptions<
-		T extends OTP.TOTP.CounterOptions & OTP.TOTP.GetTokenOptions
+		T extends (
+			OTP.TOTP.CounterOptions
+			& OTP.TOTP.GetTokenOptions
+			& Pick<OTP.TOTP.GetDeltaOptions, 'window'>
+		)
 	>( options: T )
 	{
 		const {
