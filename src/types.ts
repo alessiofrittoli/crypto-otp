@@ -2,18 +2,64 @@ import type { Algo } from '@alessiofrittoli/crypto-algorithm/types'
 
 export namespace OTP
 {
-	export type Type		= 'hotp' | 'totp'
-	export type Digits		= 6 | 7 | 8
-	export type Token		= string
-	export type Encoding	= 'ascii' | 'hex' | 'base64url' | 'base32'
-	export type Secret		= {
-		/** The secret key. */
+	/**
+	 * The OTP type.
+	 * 
+	 */
+	export type Type = 'hotp' | 'totp'
+
+
+	/**
+	 * The supported digits.
+	 * 
+	 */
+	export type Digits = 6 | 7 | 8
+
+
+	/**
+	 * The output token (otp).
+	 * 
+	 */
+	export type Token = string
+
+
+	/**
+	 * The supported secret key encoding.
+	 * 
+	 */
+	export type Encoding = 'ascii' | 'hex' | 'base64url' | 'base32'
+	
+
+	/**
+	 * Defines the accepted data for a secret key management.
+	 * 
+	 */
+	export interface Secret
+	{
+		/**
+		 * The secret key.
+		 * 
+		 */
 		key: string
-		/** The secret key encoding. Default: `hex`. */
+		/**
+		 * The secret key encoding.
+		 * 
+		 * @default 'hex'
+		 */
 		encoding?: OTP.Encoding
-		/** The hash algorithm used by the credential. Default: `SHA-1`. */
+		/**
+		 * The hash algorithm used by the credential.
+		 * 
+		 * @default 'SHA-1'
+		 */
 		algorithm?: Algo.Hash
 	}
+
+
+	/**
+	 * An object containing secret keys in all supported encoding formats.
+	 * 
+	 */
 	export type Secrets = Record<OTP.Encoding, string>
 
 
@@ -62,37 +108,59 @@ export namespace OTP
 			} & Pick<TOTP.CounterOptions, 'period'> & Pick<TOTP.GetTokenOptions, 'counter'>
 		)
 	)
-
-
-	export type GetSecretsOptions = Pick<OTP.GenericOptions, 'secret'>
-
-
+	
+	
 	export interface GenericOptions
 	{
-		/** The secret key object. */
+		/**
+		 * The secret key object.
+		 * 
+		 */
 		secret: OTP.Secret
-		/** The OTP token length. */
+		/**
+		 * The OTP token length.
+		 * 
+		 * @default 6
+		 */
 		digits?: OTP.Digits
 	}
 
 
+	/**
+	 * Defines the options required to retrieve secrets in other encoding.
+	 * 
+	 */
+	export type GetSecretsOptions = Pick<OTP.GenericOptions, 'secret'>
+
+
 	export namespace HOTP
 	{
+		/**
+		 * Defines the options required to generate a HOTP token.
+		 * 
+		 */
 		export interface GetTokenOptions extends GenericOptions
 		{
 			/** The HOTP counter. */
 			counter?: number
 		}
 
+
+		/**
+		 * Defines the options required to retrieve the delta value.
+		 * 
+		 */
 		export interface GetDeltaOptions extends GetTokenOptions
 		{
 			/** The HOTP token. */
 			token: Token
 			/**
 			 * The allowable margin for the counter.
+			 * 
 			 * The function will check codes in the future against the provided passcode,
-			 * e.g. if window = 10, and counter = 5,
-			 * this function will check the passcode against all One Time Passcodes between (counter - window) and (counter + window), inclusive.
+			 * e.g. if window = 10, and counter = 5.
+			 * 
+			 * @default 0
 			 */
 			window?: number
 		}
@@ -101,28 +169,62 @@ export namespace OTP
 
 	export namespace TOTP
 	{
+		/**
+		 * Defines a period that a TOTP code will be valid for, in seconds.
+		 * 
+		 */
 		export type Period = 15 | 30 | 60
 
+		/**
+		 * Defines the options required to generate the TOTP counter.
+		 * 
+		 */
 		export interface CounterOptions
 		{
-			/** The period parameter defines a period that a TOTP code will be valid for, in seconds. The default value is 30. */
+			/**
+			 * Defines a period that a TOTP code will be valid for, in seconds.
+			 * 
+			 * @default 30
+			 */
 			period?: TOTP.Period
-			/** Time in seconds with which to calculate counter value. Defaults to ( Date.now() / 1000 ). */
+			/**
+			 * Time in seconds used to calculate the counter value.
+			 * 
+			 * @default Date.now() / 1000
+			 */
 			time?: number
-			/** Initial time since the UNIX epoch from which to calculate the counter value. Defaults to 0 (no offset). */
+			/**
+			 * Initial time since the UNIX epoch from which to calculate the counter value.
+			 * 
+			 * @default 0 // (no offset)
+			 */
 			epoch?: number
 		}
 
 
-		export interface GetTokenOptions extends HOTP.GetTokenOptions, CounterOptions
-		{
-			/** The allowable margin for the counter. @see {@link HOTP.GetDeltaOptions} */
-			window?: number
-		}
+		/**
+		 * Defines the options required to generate a TOTP token.
+		 * 
+		 */
+		export type GetTokenOptions = HOTP.GetTokenOptions & CounterOptions
+		
 
-
+		/**
+		 * Defines the options required to retrieve the delta value.
+		 * 
+		 */
 		export interface GetDeltaOptions extends GetTokenOptions, HOTP.GetDeltaOptions
 		{
+			/**
+			 * The allowable margin for the counter.
+			 * 
+			 * The function will check codes in the future against the provided passcode,
+			 * e.g. if window = 10, and counter = 5,
+			 * this function will check the passcode against all One Time Passcodes between (counter - window) and (counter + window), inclusive.
+			 * 
+			 * @default 0
+			 */
+			window?: number
 		}
 	}
 }
