@@ -4,7 +4,7 @@ export namespace OTP
 {
 	export type Type		= 'hotp' | 'totp'
 	export type Digits		= 6 | 7 | 8
-	export type Token		= string | number
+	export type Token		= string
 	export type Encoding	= 'ascii' | 'hex' | 'base64url' | 'base32'
 	export type Secret		= {
 		/** The secret key. */

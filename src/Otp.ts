@@ -1,6 +1,6 @@
 import crypto from 'crypto'
-import { format, type UrlObject } from 'url'
 
+import { Url, type UrlObject } from '@alessiofrittoli/url-utils'
 import type { Algo } from '@alessiofrittoli/crypto-algorithm/types'
 import { Base32, type Variant } from '@alessiofrittoli/crypto-encoder/Base32'
 import { Hmac, generateKey } from '@alessiofrittoli/crypto-key'
@@ -11,9 +11,25 @@ import type { OTP } from './types'
 
 export class Otp
 {
+	/**
+	 * Defines the default used digits.
+	 * 
+	 */
 	static Digits: OTP.Digits = 6
+	/**
+	 * Defines the default secret key encoding.
+	 * 
+	 */
 	static Encoding: OTP.Encoding = 'hex'
+	/**
+	 * Defines the default secret key hash algorithm.
+	 * 
+	 */
 	static Algorithm: Algo.Hash = 'SHA-1'
+	/**
+	 * Defines the default Base32 encoding variant.
+	 * 
+	 */
 	static Base32Variant: Variant = Base32.VARIANT.RFC3548
 
 
@@ -137,7 +153,7 @@ export class Otp
 		for ( let index = 0, l = bytes.length; index < l; index++ ) {
 			output += (
 				set[
-					Math.floor( ( bytes[ index ] || 0 ) / 255 * ( set.length - 1 ) )
+					Math.floor( ( bytes[ index ]! ) / 255 * ( set.length - 1 ) )
 				]
 			)
 		}
@@ -156,39 +172,42 @@ export class Otp
 	 */
 	protected static GetAuthURL<T extends OTP.Type>( options: OTP.AuthURLOptions<T> )
 	{
-		options.secret.algorithm||= Otp.Algorithm
-		options.secret.encoding	||= Otp.Encoding
-		options.digits			||= Otp.Digits
 
-		const { type }	= options
-		let { key }		= options.secret
-		const algorithm	= options.secret.algorithm.replace( /-/g, '' ).toUpperCase()
+		const {
+			secret: {
+				algorithm	= Otp.Algorithm,
+				encoding	= Otp.Encoding,
+			},
+			digits = Otp.Digits, type, label, issuer, counter
+		} = options
+
+		let { key }			= options.secret
+		const _algorithm	= algorithm.replace( /-/g, '' ).toUpperCase()
 
 
-		if ( options.secret.encoding !== 'base32' ) {
-			key = Base32.encode( Buffer.from( key, options.secret.encoding ), Otp.Base32Variant )
+		if ( encoding !== 'base32' ) {
+			key = Base32.encode( Buffer.from( key, encoding ), Otp.Base32Variant )
 		}
 
 		const query: UrlObject[ 'query' ] = {
 			secret		: key.toString(),
-			algorithm	: algorithm,
-			digits		: options.digits,
+			algorithm	: _algorithm,
+			digits		: digits,
 		}
-		if ( options.issuer ) query.issuer = options.issuer
+		if ( issuer ) query.issuer = issuer
 
 		if ( type === 'hotp' ) {
-			query.counter = options.counter
+			query.counter = counter
 		}
 		if ( type === 'totp' && options.period ) query.period = options.period
 
 		return (
-			format(
+			Url.format(
 				{
 					protocol: 'otpauth',
 					hostname: type,
 					// pathname: encodeURIComponent( options.label ),
-					pathname: options.label,
-					slashes	: true,
+					pathname: label,
 					query	: query,
 				}
 			)
@@ -204,33 +223,35 @@ export class Otp
 	 */
 	static GetSecrets( options: OTP.GetSecretsOptions )
 	{
-		options.secret.encoding ||= Otp.Encoding
+		const { secret: {
+			encoding = Otp.Encoding, key
+		} } = options
 
 		return (
 			Object.fromEntries(
 				( [ 'ascii', 'hex', 'base64url', 'base32' ] as OTP.Encoding[] )
 					.map( enc => {
 
-						if ( enc === options.secret.encoding ) {
-							return [ enc, options.secret.key ]
+						if ( enc === encoding ) {
+							return [ enc, key ]
 						}
 
 						if ( enc === 'base32' ) {
 							// secret is not base32 so we need to decode from standard encoding and encode it in base32
 							return (
 								[ enc, Base32.encode(
-									Buffer.from( options.secret.key, options.secret.encoding as BufferEncoding ),
+									Buffer.from( key, encoding as BufferEncoding ),
 									Otp.Base32Variant
 								) ]
 							)
 						}
 
-						if ( options.secret.encoding === 'base32' ) {
+						if ( encoding === 'base32' ) {
 							// secret is base32 so we decode it and transform to the requested encoding.
 							return (
 								[ enc, (
 									Buffer.from(
-										Base32.decode( options.secret.key, Otp.Base32Variant )
+										Base32.decode( key, Otp.Base32Variant )
 									).toString( enc )
 								) ]
 							)
@@ -238,7 +259,7 @@ export class Otp
 
 						return (
 							[ enc, (
-								Buffer.from( options.secret.key, options.secret.encoding )
+								Buffer.from( key, encoding )
 									.toString( enc )
 							) ]
 						)

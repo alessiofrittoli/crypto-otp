@@ -28,6 +28,28 @@ export class Hotp extends Otp
 
 
 	/**
+	 * Get HOTP token delta.
+	 * 
+	 * If the token is valid, the delta will match the step on which the given token has been validated with the given counter.
+	 * 
+	 * @param	options The HOTP options. @see {@link OTP.HOTP.GetDeltaOptions}
+	 * @returns	The delta number, null otherwise.
+	 */
+	static GetDelta( options: OTP.HOTP.GetDeltaOptions ): number | null
+	
+	
+	/**
+	 * Get TOTP token delta.
+	 * 
+	 * If the token is valid, the delta will match the step on which the given token has been validated with the given counter.
+	 * 
+	 * @param	options The TOTP options. @see {@link OTP.TOTP.GetDeltaOptions}
+	 * @returns	The delta number, null otherwise.
+	 */
+	static GetDelta( options: OTP.TOTP.GetDeltaOptions, twoSidedWindow?: boolean ): number | null
+	
+	
+	/**
 	 * Get OTP token delta.
 	 * 
 	 * If the token is valid, the delta will match the step on which the given token has been validated with the given counter.
@@ -38,9 +60,9 @@ export class Hotp extends Otp
 	 * 							⚠️ This flag is provisioned for TOTP use only! ⚠️
 	 * @returns	The delta number, null otherwise.
 	 */
-	static GetDelta( options: OTP.HOTP.GetDeltaOptions, twoSidedWindow: boolean = false )
+	static GetDelta( options: OTP.HOTP.GetDeltaOptions, twoSidedWindow: boolean = false ): number | null
 	{
-		let token: OTP.Token = ( options.token || '' ).toString()
+		const { token } = options
 
 		if ( ! token ) {
 			throw new Exception( 'No token has been provided.', {
@@ -48,45 +70,43 @@ export class Hotp extends Otp
 			} )
 		}
 
-		options.counter	||= 0
-		options.window	||= 0
-		options.digits	||= Hotp.Digits
+		const {
+			counter = 0, window = 0, digits = Hotp.Digits, ...rest
+		} = options
 		
-		const { digits } = options
-		const counter = (
+		const _counter = (
 			! twoSidedWindow
-				? options.counter
-				: options.counter - options.window
+				? counter
+				: counter - window
 		)
-		const window = (
+		const _window = (
 			! twoSidedWindow
-				? options.window
-				: options.window * 2
+				? window
+				: window * 2
 		)
 	
 		/** Fail if token is not of correct length */
 		if ( token.length !== digits ) return null
 	
 		/** Parse token to integer */
-		token = parseInt( token, 10 )
+		const intToken = parseInt( token, 10 )
 	
 		/** Fail if token is NaN */
-		if ( isNaN( token ) ) return null
+		if ( isNaN( intToken ) ) return null
 		
 		/** Loop from counter to ( counter + window ) inclusive */
-		for ( let i = counter; i <= counter + window; ++i ) {
+		for ( let i = _counter; i <= _counter + _window; ++i ) {
 
-			options.counter = i
-			const _token = parseInt( Hotp.GetToken( options ), 10 )
+			const _token = parseInt( Hotp.GetToken( { ...rest, digits, counter: i } ), 10 )
 
-			if ( _token === token ) {
+			if ( _token === intToken ) {
 
-				const delta = i - counter
+				const delta = i - _counter
 				
 				return (
 					! twoSidedWindow
 						? delta
-						: delta - options.window
+						: delta - window
 				)
 
 			}
@@ -104,16 +124,14 @@ export class Hotp extends Otp
 	 */
 	static Get( options: OTP.HOTP.GetTokenOptions & Omit<OTP.AuthURLOptions<'hotp'>, 'type'> )
 	{
-		options.counter ||= 0
+		const _options = Hotp.ResolveOptions( options )
 
 		return (
 			{
-				code		: Hotp.GetToken( options ),
-				counter		: options.counter,
-				authUrl		: Hotp.AuthURL( options ),
-				digits		: options.digits,
-				secret		: options.secret,
-				secrets		: Hotp.GetSecrets( options ),
+				code		: Hotp.GetToken( _options ),
+				authUrl		: Hotp.AuthURL( _options ),
+				secrets		: Hotp.GetSecrets( _options ),
+				..._options,
 			}
 		)
 	}
@@ -127,11 +145,11 @@ export class Hotp extends Otp
 	 */
 	static GetToken( options: OTP.HOTP.GetTokenOptions )
 	{
-		options.digits	||= Hotp.Digits
+		const { digits = Hotp.Digits } = options
 
 		return (
 			Hotp.DigestToToken(
-				Hotp.Digest( options ), options.digits
+				Hotp.Digest( options ), digits
 			)
 		)
 	}
@@ -147,12 +165,22 @@ export class Hotp extends Otp
 		T extends OTP.HOTP.GetTokenOptions
 	>( options: T )
 	{
-		options.secret.algorithm||= Hotp.Algorithm
-		options.secret.encoding	||= Hotp.Encoding
-		options.digits			||= Hotp.Digits
-		options.counter 		??= 0
+		const {
+			secret: {
+				key,
+				algorithm	= Hotp.Algorithm,
+				encoding	= Hotp.Encoding
+			},
+			counter	= 0,
+			digits	= Hotp.Digits,
+		} = options
 
-		return options as NonNullableFields<DeepFull<T>>
+		return {
+			...options,
+			secret: { key, algorithm, encoding },
+			counter, digits
+		} as NonNullableFields<DeepFull<T>>
+
 	}
 
 
@@ -164,14 +192,15 @@ export class Hotp extends Otp
 	 */
 	static Digest( options: Omit<OTP.HOTP.GetTokenOptions, 'digits'> ): Buffer
 	{
-		options.secret.algorithm||= Hotp.Algorithm
-		options.secret.encoding	||= Hotp.Encoding
-		options.counter			||= 0
+		const {
+			counter = 0,
+			secret: { key, algorithm = Hotp.Algorithm, encoding = Hotp.Encoding }
+		} = options
 
 		return (
 			Hotp.createDigest(
-				options.secret.algorithm,
-				Hotp.HmacKey( options.secret.key, options.secret.encoding ), Hotp.Counter( options.counter )
+				algorithm,
+				Hotp.HmacKey( key, encoding ), Hotp.Counter( counter )
 			)
 		)
 	}
@@ -203,10 +232,10 @@ export class Hotp extends Otp
 	 */
 	static AuthURL( options: Omit<OTP.AuthURLOptions<'hotp'>, 'type'> )
 	{
-		options.counter ??= 0
+		const { counter = 0, ...rest } = options
 
 		return (
-			Otp.GetAuthURL( { ...options, type: 'hotp' } )
+			Otp.GetAuthURL( { counter, ...rest, type: 'hotp' } )
 		)
 	}
 }
