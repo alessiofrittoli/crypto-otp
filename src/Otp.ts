@@ -38,7 +38,9 @@ export class Otp
 	 *
 	 * @param	digest	The digest Buffer.
 	 * @param	digits	( Optional ) The OTP token digits count ( usually 6 | 8 ). Default: `6`.
-	 *
+	 * 
+	 * [RFC 4226 - IETF](https://datatracker.ietf.org/doc/html/rfc4226#section-5.3)
+	 * 
 	 * @returns	The OTP token.
 	 */
 	static DigestToToken(
@@ -46,12 +48,12 @@ export class Otp
 		digits: OTP.Digits = Otp.Digits,
 	)
 	{
-		const offset = ( digest.at( -1 ) || 0 ) & 0xf
+		const offset = ( digest.at( -1 ) ?? 0 ) & 0xf
 		const binary = (
-			( ( ( digest[ offset ] || 0 ) & 0x7f ) << 24 ) |
-			( ( ( digest[ offset + 1 ] || 0 ) & 0xff ) << 16 ) |
-			( ( ( digest[ offset + 2 ] || 0 ) & 0xff ) << 8 ) |
-			( ( digest[ offset + 3 ] || 0 ) & 0xff )
+			( ( ( digest[ offset ] ?? 0 ) & 0x7f ) << 24 ) |
+			( ( ( digest[ offset + 1 ] ?? 0 ) & 0xff ) << 16 ) |
+			( ( ( digest[ offset + 2 ] ?? 0 ) & 0xff ) << 8 ) |
+			( ( digest[ offset + 3 ] ?? 0 ) & 0xff )
 		)
 
 		const token = binary % Math.pow( 10, digits )
@@ -199,7 +201,9 @@ export class Otp
 		if ( type === 'hotp' ) {
 			query.counter = counter
 		}
-		if ( type === 'totp' && options.period ) query.period = options.period
+		if ( type === 'totp' && options.period ) {
+			query.period = options.period
+		}
 
 		return (
 			Url.format(
