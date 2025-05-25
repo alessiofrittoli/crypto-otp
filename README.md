@@ -74,8 +74,6 @@ You can optionally pass a string as the first and unique argument to the `Otp.Se
 
 ```ts
 import { Otp } from '@alessiofrittoli/crypto-otp'
-// or
-import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const secret = Otp.Seed( '45385623' )
 ```
@@ -94,8 +92,6 @@ You can use the `Otp.GenerateSecretASCII()` static method to generate a random A
 
 ```ts
 import { Otp } from '@alessiofrittoli/crypto-otp'
-// or
-import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const secret = Otp.GenerateSecretASCII()
 ```
@@ -113,11 +109,9 @@ You can use the `Otp.GetSecrets()` static method to retrieve the Secret Key in d
 
 ```ts
 import { Otp } from '@alessiofrittoli/crypto-otp'
-// or
-import { Otp } from '@alessiofrittoli/crypto-otp/Otp'
 
 const { hex, ascii, base64url, base32 } = Otp.GetSecrets( {
-    secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
+  secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
 } )
 ```
 
@@ -135,27 +129,37 @@ To do so you need a OTP Auth URL which can be stored in a QR code.
 
 ```ts
 import { Hotp } from '@alessiofrittoli/crypto-otp'
-// or
-import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
 
 const authUrl = Hotp.AuthURL( {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-  label   : 'The issuer:account@name.com',
+  counter : 256, // current credential counter retrieved from a database.
+  label   : 'Provider:account@name.com',
+} )
+// or
+const authUrl = Hotp.AuthURL( {
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  counter : 256, // current credential counter retrieved from a database.
+  label   : 'account@name.com',
+  issuer  : 'Provider',
 } )
 ```
 
 ```ts
 import { Totp } from '@alessiofrittoli/crypto-otp'
-// or
-import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 
 const authUrl = Totp.AuthURL( {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
-  label   : 'The issuer:account@name.com',
+  label   : 'Provider:account@name.com',
+} )
+// or
+const authUrl = Totp.AuthURL( {
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  label   : 'account@name.com',
+  issuer  : 'Provider',
 } )
 ```
 
-You should then use a third-pary module to generate the QR code (e.g. [`qrcode - npm`](https://www.npmjs.com/package/qrcode)).
+You could then use a third-pary library to generate the QR code (e.g. [`qrcode - npm`](https://npmjs.com/package/qrcode)).
 
 ```ts
 import QrCode from 'qrcode'
@@ -177,13 +181,10 @@ You can use the `Hotp` "Static" Class to create or verify a HOTP Token.
 
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
-
 
 const options: OTP.HOTP.GetTokenOptions = {
-  secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
+  secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
+  counter : 256, // current credential counter retrieved from a database.
 }
 
 const token = Hotp.GetToken( options )
@@ -201,9 +202,6 @@ const token = Hotp.GetToken( options )
 
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -229,9 +227,6 @@ A HOTP is incremented on every usage. You should then stored the incremented cou
 
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -241,9 +236,9 @@ const options: OTP.HOTP.GetDeltaOptions = {
 
 /**
  * Returns `0` where the delta is the counter difference between the given token and the current counter + 1.
-  * If `null` the given token is not valid and should not be accepted.
-  * 
-  */
+ * If `null` the given token is not valid and should not be accepted.
+ * 
+ */
 const delta = Hotp.GetDelta( options )
 ```
 
@@ -262,14 +257,11 @@ We could then offer to the user the possibility to synchorinze counters.
 
 ```ts
 import { Hotp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Hotp } from '@alessiofrittoli/crypto-otp/Hotp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.HOTP.GetDeltaOptions = {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
   token   : token, // The token provided by the user.
-  window  : 500,
+  window  : 500, // window should not be greater than `10` during auth processes. only use high values after user has already been authenticated with a different auth method.
   counter : counterStoredInDatabase,
 }
 
@@ -291,9 +283,6 @@ You can use the `Totp` "Static" Class to create or verify a TOTP Token.
 
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetTokenOptions = {
   secret: { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' }
@@ -314,9 +303,6 @@ const token = Totp.GetToken( options )
 
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetDeltaOptions = {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -341,9 +327,6 @@ A TOTP is incremented every step time-step seconds. By default, the time-step is
 
 ```ts
 import { Totp, type OTP } from '@alessiofrittoli/crypto-otp'
-// or
-import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
-import type { OTP } from '@alessiofrittoli/crypto-otp/types'
 
 const options: OTP.TOTP.GetDeltaOptions = {
   secret  : { key: '2E58D8285025A05094667561B3D1AA4EC9CFAB3B' },
@@ -353,9 +336,9 @@ const options: OTP.TOTP.GetDeltaOptions = {
 
 /**
  * Returns `0` where the delta is the time step difference between the given token and the current time.
-  * If `null` the given token is not valid and should not be accepted.
-  * 
-  */
+ * If `null` the given token is not valid and should not be accepted.
+ * 
+ */
 const delta = Totp.GetDelta( options )
 ```
 
@@ -373,8 +356,6 @@ To do so you can use the `Totp.NextTick()` method which returns the `Date` objec
 
 ```ts
 import { Totp } from '@alessiofrittoli/crypto-otp'
-// or
-import { Totp } from '@alessiofrittoli/crypto-otp/Totp'
 
 const date = Totp.NextTick()
 ```
@@ -385,7 +366,12 @@ const date = Totp.NextTick()
 
 #### Window
 
-The allowable margin for the counter. The function will check codes in the future against the provided passcode, e.g. if window = 10, and counter = 5, this function will check the passcode against all One Time Passcodes between (counter - window) and (counter + window), inclusive.
+The number of counter values to check ahead of the expected counter during HOTP token verification.
+
+This accounts for possible counter desynchronization between the client and server, as described in [RFC 4226, section 7.2](https://datatracker.ietf.org/doc/html/rfc4226#section-7.2).
+
+For example, if the current counter is 100 and `window` is set to 10, the verification logic will check counters from 100 to 110 (inclusive).
+A larger window improves tolerance but increases the risk of token reuse and brute-force attacks.
 
 <details>
 
@@ -421,18 +407,18 @@ const time2 = time1 + 60 // 1717993260
 
 /**
  * By way of example, we will force TOTP to return tokens at time `time1` and
-  * at time `time2` (60 seconds ahead, or 2 steps ahead).
-  */
+ * at time `time2` (60 seconds ahead, or 2 steps ahead).
+ */
 const token1 = Totp.GetToken( { secret, time: time1 } ) // 289254
 const token2 = Totp.GetToken( { secret, time: time2 } ) // 345152
 
 /**
  * We can check the time at token 2, with token 1, but use a window of 2.
-  * With a time step of 30 seconds, this will check all tokens from 60 seconds before the time to 60 seconds after the time.
-  * 
-  * The following example will return `-2`. This signifies that the given token, token1, is -2 steps away from the given time,
-  * which means that it is the token for the value at (-2 * time step) = (-2 * 30 seconds) = 60 seconds ago.
-  */
+ * With a time step of 30 seconds, this will check all tokens from 60 seconds before the time to 60 seconds after the time.
+ * 
+ * The following example will return `-2`. This signifies that the given token, token1, is -2 steps away from the given time,
+ * which means that it is the token for the value at (-2 * time step) = (-2 * 30 seconds) = 60 seconds ago.
+ */
 const delta = Totp.GetDelta( { secret, token: token1, window: 2, time: time2 } )
 ```
 
