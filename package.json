@@ -10,9 +10,18 @@
 	"license": "MIT",
 	"keywords": [
 		"crypto",
+		"security",
+		"cyber-security",
+		"authorization",
+		"auth-cerimony",
+		"otp",
+		"otpauth",
+		"one-time-password",
 		"one-time-passwords",
-		"hmac-otp",
-		"time-otp"
+		"hotp",
+		"hmac-one-time-passwords",
+		"time-based-one-time-passwords",
+		"totp"
 	],
 	"homepage": "https://github.com/alessiofrittoli/crypto-otp#readme",
 	"bugs": {
