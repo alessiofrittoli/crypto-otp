@@ -180,7 +180,7 @@ export class Otp
 				algorithm	= Otp.Algorithm,
 				encoding	= Otp.Encoding,
 			},
-			digits = Otp.Digits, type, label, issuer, counter
+			digits = Otp.Digits, type, label, issuer
 		} = options
 
 		let { key }			= options.secret
@@ -199,7 +199,7 @@ export class Otp
 		if ( issuer ) query.issuer = issuer
 
 		if ( type === 'hotp' ) {
-			query.counter = counter
+			query.counter = options.counter
 		}
 		if ( type === 'totp' && options.period ) {
 			query.period = options.period

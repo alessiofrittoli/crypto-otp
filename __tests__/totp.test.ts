@@ -175,14 +175,10 @@ describe( 'Totp.AuthURL()', () => {
 		const secrets = Totp.GetSecrets( {
 			secret: { key: hexSecret }
 		} )
-		const counter = Totp.Counter( {
-			time: new Date( '2024-12-13T16:00:00.000Z' ).getTime() / 1000
-		} )
 
 		const url = new URL( Totp.AuthURL( {
 			label	: 'example@email.com',
 			digits	: 8,
-			counter	: counter,
 			period	: 60,
 			secret	: { key: hexSecret },
 			issuer	: 'Issuer',

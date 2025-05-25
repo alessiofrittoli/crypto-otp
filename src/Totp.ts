@@ -56,12 +56,11 @@ export class Totp extends Otp
 	 */
 	static GetToken( options: OTP.TOTP.GetTokenOptions )
 	{
-		const {
-			counter = Totp.Counter( options ), ...rest
-		} = options
-
 		return (
-			Hotp.GetToken( { ...rest, counter } )
+			Hotp.GetToken( {
+				...options,
+				counter: Totp.Counter( options ) }
+			)
 		)
 	}
 
