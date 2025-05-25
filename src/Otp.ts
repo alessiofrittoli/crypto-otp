@@ -206,8 +206,7 @@ export class Otp
 				{
 					protocol: 'otpauth',
 					hostname: type,
-					// pathname: encodeURIComponent( options.label ),
-					pathname: label,
+					pathname: encodeURIComponent( label ),
 					query	: query,
 				}
 			)
