@@ -1,54 +1,71 @@
 import type { Algo } from '@alessiofrittoli/crypto-algorithm/types'
 
+
+/**
+ * One-Time Password (OTP) namespace.
+ * 
+ * Includes types and interfaces for HOTP (RFC 4226) and TOTP (RFC 6238) authentication.
+ * 
+ * [RFC 4226 - IETF](https://datatracker.ietf.org/doc/html/rfc4226)
+ * 
+ * [RFC 6238 - IETF](https://datatracker.ietf.org/doc/html/rfc6238)
+ */
 export namespace OTP
 {
 	/**
-	 * The OTP type.
+	 * The OTP type: either counter-based (HOTP) or time-based (TOTP).
 	 * 
 	 */
 	export type Type = 'hotp' | 'totp'
 
 
 	/**
-	 * The supported digits.
+	 * The number of digits in a generated OTP token.
 	 * 
+	 * Typical values are 6 (default), 7, or 8.
 	 */
 	export type Digits = 6 | 7 | 8
 
 
 	/**
-	 * The output token (otp).
+	 * A one-time password (OTP) token string.
 	 * 
+	 * Typically a numeric string of the specified length.
 	 */
 	export type Token = string
 
 
 	/**
-	 * The supported secret key encoding.
+	 * Supported encodings for the secret key.
 	 * 
+	 * These define how the key is serialized before being decoded into bytes.
 	 */
 	export type Encoding = 'ascii' | 'hex' | 'base64url' | 'base32'
 	
 
 	/**
-	 * Defines the accepted data for a secret key management.
+	 * Secret key configuration used in OTP generation.
 	 * 
 	 */
 	export interface Secret
 	{
 		/**
-		 * The secret key.
+		 * The secret key as a string, encoded using the specified encoding.
 		 * 
 		 */
 		key: string
 		/**
-		 * The secret key encoding.
+		 * The encoding used to interpret the secret key string.
 		 * 
 		 * @default 'hex'
 		 */
 		encoding?: OTP.Encoding
 		/**
-		 * The hash algorithm used by the credential.
+		 * The hash algorithm used for HMAC generation.
+		 * 
+		 * Defaults to SHA-1 for compatibility with
+		 * [RFC 4226](https://datatracker.ietf.org/doc/html/rfc4226) and [RFC 6238](https://datatracker.ietf.org/doc/html/rfc6238),
+		 * but SHA-256 and SHA-512 are also supported.
 		 * 
 		 * @default 'SHA-1'
 		 */
@@ -57,16 +74,19 @@ export namespace OTP
 
 
 	/**
-	 * An object containing secret keys in all supported encoding formats.
+	 * A mapping of secret keys in all supported encoding formats.
 	 * 
 	 */
 	export type Secrets = Record<OTP.Encoding, string>
 
 
 	/**
-	 * OTP Auth URL options.
+	 * Options for creating an OTP Auth URI (`otpauth://`) used in QR codes or OTP apps.
 	 *
+	 * Format reference:
+	 * 
 	 * @link https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+	 * @link https://docs.yubico.com/yesdk/users-manual/application-oath/uri-string-format.html
 	 */
 	export type AuthURLOptions<T extends Type = 'hotp'> = OTP.GenericOptions & (
 		{
@@ -90,6 +110,7 @@ export namespace OTP
 			label: string
 			/**
 			 * The OTP issuer.
+			 * 
 			 * The issuer parameter is an optional but recommended string value indicating the provider or service the credential is associated with.
 			 * It is URL-encoded according to [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
 			 * If the issuer parameter is absent, issuer information may be taken from the issuer prefix of the label.
@@ -113,15 +134,19 @@ export namespace OTP
 	)
 	
 	
+	/**
+	 * Base options shared across HOTP and TOTP configurations.
+	 * 
+	 */
 	export interface GenericOptions
 	{
 		/**
-		 * The secret key object.
+		 * The shared secret key and associated encoding/algorithm.
 		 * 
 		 */
 		secret: OTP.Secret
 		/**
-		 * The OTP token length.
+		 * Number of digits for the generated OTP token.
 		 * 
 		 * @default 6
 		 */
@@ -130,12 +155,17 @@ export namespace OTP
 
 
 	/**
-	 * Defines the options required to retrieve secrets in other encoding.
+	 * Options used to retrieve the secret in multiple encoding formats.
 	 * 
 	 */
 	export type GetSecretsOptions = Pick<OTP.GenericOptions, 'secret'>
 
 
+	/**
+	 * HOTP (HMAC-based One-Time Password) specific types.
+	 * 
+	 * [RFC 4226 - IETF](https://datatracker.ietf.org/doc/html/rfc4226).
+	 */
 	export namespace HOTP
 	{
 		/**
@@ -144,25 +174,38 @@ export namespace OTP
 		 */
 		export interface GetTokenOptions extends GenericOptions
 		{
-			/** The HOTP counter. */
+			/**
+			 * The counter value used in HOTP generation.
+			 * 
+			 */
 			counter?: number
 		}
 
 
 		/**
-		 * Defines the options required to retrieve the delta value.
+		 * Options for verifying a HOTP token and determining the delta from a given counter.
 		 * 
 		 */
 		export interface GetDeltaOptions extends GetTokenOptions
 		{
-			/** The HOTP token. */
+			/**
+			 * The HOTP token to verify.
+			 * 
+			 */
 			token: Token
 			/**
-			 * The allowable margin for the counter.
+			 * The number of counter values to check ahead of the expected counter during HOTP token verification.
+			 *
+			 * This accounts for possible counter desynchronization between the client and server, as described in
+			 * [RFC 4226, section 7.2](https://datatracker.ietf.org/doc/html/rfc4226#section-7.2).
+			 *
+			 * For example, if the current counter is 100 and `window` is set to 10, the verification logic will check
+			 * counters from 100 to 110 (inclusive).
+			 *
+			 * A larger window improves tolerance but increases the risk of token reuse and brute-force attacks.
 			 * 
-			 * The function will check codes in the future against the provided passcode,
-			 * e.g. if window = 10, and counter = 5.
-			 * 
+			 * [RFC 4226 - IETF](https://datatracker.ietf.org/doc/html/rfc4226#section-7.2)
+			 *
 			 * @default 0
 			 */
 			window?: number
@@ -170,6 +213,11 @@ export namespace OTP
 	}
 
 
+	/**
+	 * TOTP (Time-based One-Time Password) specific types.
+	 * 
+	 * [RFC 6238 - IETF](https://datatracker.ietf.org/doc/html/rfc6238).
+	 */
 	export namespace TOTP
 	{
 		/**
@@ -178,8 +226,9 @@ export namespace OTP
 		 */
 		export type Period = 15 | 30 | 60
 
+
 		/**
-		 * Defines the options required to generate the TOTP counter.
+		 * Options used to calculate the TOTP time-step counter.
 		 * 
 		 */
 		export interface CounterOptions
@@ -213,17 +262,21 @@ export namespace OTP
 		
 
 		/**
-		 * Defines the options required to retrieve the delta value.
+		 * Options for verifying a TOTP token and determining the time-step delta.
 		 * 
 		 */
 		export interface GetDeltaOptions extends GetTokenOptions, HOTP.GetDeltaOptions
 		{
 			/**
-			 * The allowable margin for the counter.
+			 * The number of time-step counter values to check before and after the expected counter during TOTP token verification.
+			 *
+			 * This helps accommodate clock drift or time synchronization issues between client and server, as recommended in
+			 * [RFC 6238, section 5.2](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2).
+			 *
+			 * For example, if `window = 1`, the algorithm will check the passcode for the current time step, the previous one,
+			 * and the next one (i.e. `counter - 1` to `counter + 1`).
 			 * 
-			 * The function will check codes in the future against the provided passcode,
-			 * e.g. if window = 10, and counter = 5,
-			 * this function will check the passcode against all One Time Passcodes between (counter - window) and (counter + window), inclusive.
+			 * [RFC 6238 - IETF](https://datatracker.ietf.org/doc/html/rfc6238#section-5.2)
 			 * 
 			 * @default 0
 			 */

@@ -8,11 +8,7 @@ import type { OTP } from './types'
 /**
  * HMAC-Based One-Time Password.
  * 
- * **References**
- *
- * - https://github.com/yeojz/otplib
- * - https://en.wikipedia.org/wiki/HMAC-based_One-time_Password_Algorithm
- * - https://tools.ietf.org/html/rfc4226
+ * [RFC 4226 - IETF](https://datatracker.ietf.org/doc/html/rfc4226)
  */
 export class Hotp extends Otp
 {
