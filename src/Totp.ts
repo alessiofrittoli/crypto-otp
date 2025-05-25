@@ -4,11 +4,9 @@ import type { OTP } from './types'
 
 
 /**
- * Manage Time-Based One-Time Password.
+ * Time-Based One-Time Password.
  * 
- * **References**
- *
- * - https://github.com/speakeasyjs/speakeasy
+ * [RFC 6238 - IETF](https://datatracker.ietf.org/doc/html/rfc6238)
  */
 export class Totp extends Otp
 {
