@@ -72,17 +72,20 @@ export namespace OTP
 		{
 			/**
 			 * The label is used to identify which account a key is associated with.
-			 * It contains an account name, which is a URI-encoded string, optionally prefixed by an issuer string
+			 * 
+			 * It contains an account name, which is automatically URI-encoded, optionally prefixed by an issuer string
 			 * identifying the provider or service managing that account.
 			 * This issuer prefix can be used to prevent collisions between different accounts with different providers that might be
 			 * identified using the same account name, e.g. the user's email address.
 			 *
-			 * The issuer prefix and account name should be separated by a literal or url-encoded colon,
+			 * The issuer prefix and account name should be separated by a literal colon,
 			 * and optional spaces may precede the account name.
 			 * Neither issuer nor account name may themselves contain a colon.
 			 * Represented in ABNF according to [RFC 5234](https://datatracker.ietf.org/doc/html/rfc5234).
 			 *
 			 * Valid values might include `Example:alice@gmail.com`, `Provider1:Alice%20Smith` or `Big%20Corporation%3A%20alice%40bigco.com`.
+			 * 
+			 * ⚠️ The label is now automatically URI-encoded since version 3.0.0.
 			 */
 			label: string
 			/**
