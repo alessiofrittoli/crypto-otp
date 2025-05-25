@@ -191,7 +191,7 @@ describe( 'Totp.AuthURL()', () => {
 		
 		expect( url.protocol ).toBe( 'otpauth:' )
 		expect( url.host ).toBe( 'totp' )
-		expect( url.pathname ).toBe( '/example@email.com' )
+		expect( url.pathname ).toBe( '/example%40email.com' )
 		expect( params.get( 'secret' ) ).toBe( secrets.base32 )
 		expect( params.get( 'algorithm' ) ).toBe( 'SHA1' )
 		expect( params.get( 'digits' ) ).toBe( '8' )
