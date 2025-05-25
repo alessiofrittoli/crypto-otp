@@ -6,39 +6,6 @@ const base64Secret	= Buffer.from( hexSecret, 'hex' ).toString( 'base64url' )
 const base32Secret	= 'L5WNCK5A5SHCZNOIUTFHJ7GNCFWEGGY5'
 
 
-describe( 'Hotp.Get()', () => {
-
-	it( 'returns all details', () => {
-		// @ts-expect-error testing default values
-		const hotp = Hotp.Get( {
-			secret	: { key: hexSecret },
-			label	: 'email@example.com',
-			issuer	: 'Issuer',
-		} )
-
-		expect( hotp.code ).toBe( '522465' ) // this may fail if secret changes
-		expect( hotp.counter ).toBe( 0 )
-		expect( hotp.digits ).toBe( 6 )
-		expect( hotp.label ).toBe( 'email@example.com' )
-		expect( hotp.issuer ).toBe( 'Issuer' )
-		expect( hotp.authUrl ).toBe( 'otpauth://hotp/email@example.com?secret=3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX&algorithm=SHA1&digits=6&issuer=Issuer&counter=0' )
-		expect( hotp.secret ).toEqual( {
-			key			: hexSecret,
-        	algorithm	: 'SHA-1',
-        	encoding	: 'hex'
-		} )
-		expect( hotp.secrets ).toEqual( {
-			ascii		: '\\\x0E=\x1EF\x1B@4\x1FlE\x1B\x04\x0B1-iS~7',
-			hex			: hexSecret,
-			base64url	: '3A49nkYbwDQfbEUbhIsxLelTfrc',
-			base32		: '3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX'
-      	} )
-
-	} )
-	
-} )
-
-
 describe( 'Hotp.GetToken()', () => {
 
 	const options: OTP.HOTP.GetTokenOptions = {
@@ -351,33 +318,4 @@ describe( 'Hotp.Verify()', () => {
 		} ) ).toBe( false )
 	} )
 
-} )
-
-
-describe( 'Hotp.ResolveOptions()', () => {
-
-	const options: OTP.HOTP.GetTokenOptions = {
-		secret	: { key: hexSecret },
-	}
-
-	it( 'resolves defaults options', () => {
-		const resolved		= Hotp.ResolveOptions( options )
-		const { secret }	= resolved
-
-		expect( 'secret' in resolved ).toBe( true )
-		expect( 'digits' in resolved ).toBe( true )
-		expect( 'counter' in resolved ).toBe( true )
-
-		expect( 'key' in secret ).toBe( true )
-		expect( 'algorithm' in secret ).toBe( true )
-		expect( 'encoding' in secret ).toBe( true )
-
-		expect( secret.key ).toBe( hexSecret )
-		expect( secret.algorithm ).toBe( 'SHA-1' )
-		expect( secret.encoding ).toBe( 'hex' )
-
-		expect( resolved.digits ).toBe( 6 )
-		expect( resolved.counter ).toBe( 0 )
-	} )
-	
 } )

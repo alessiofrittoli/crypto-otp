@@ -117,27 +117,6 @@ export class Hotp extends Otp
 
 
 	/**
-	 * Get HOTP details.
-	 * 
-	 * @param	options The HOTP.GetTokenOptions and the OTP.AuthURLOptions object.
-	 * @returns	A detailed representation of the current HOTP.
-	 */
-	static Get( options: OTP.HOTP.GetTokenOptions & Omit<OTP.AuthURLOptions<'hotp'>, 'type'> )
-	{
-		const _options = Hotp.ResolveOptions( options )
-
-		return (
-			{
-				code		: Hotp.GetToken( _options ),
-				authUrl		: Hotp.AuthURL( _options ),
-				secrets		: Hotp.GetSecrets( _options ),
-				..._options,
-			}
-		)
-	}
-
-
-	/**
 	 * Generates a HMAC-Based One-Time Password (HOTP)
 	 * 
 	 * @param	options The HOTP options. @see {@link OTP.HOTP.GetTokenOptions}
@@ -152,35 +131,6 @@ export class Hotp extends Otp
 				Hotp.Digest( options ), digits
 			)
 		)
-	}
-
-	
-	/**
-	 * Resolve options with default values if necessary.
-	 * 
-	 * @param	options The options object.
-	 * @returns A non nullable options object.
-	 */
-	static ResolveOptions<
-		T extends OTP.HOTP.GetTokenOptions
-	>( options: T )
-	{
-		const {
-			secret: {
-				key,
-				algorithm	= Hotp.Algorithm,
-				encoding	= Hotp.Encoding
-			},
-			counter	= 0,
-			digits	= Hotp.Digits,
-		} = options
-
-		return {
-			...options,
-			secret: { key, algorithm, encoding },
-			counter, digits
-		} as NonNullableFields<DeepFull<T>>
-
 	}
 
 

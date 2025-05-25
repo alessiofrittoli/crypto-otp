@@ -51,28 +51,6 @@ export class Totp extends Otp
 
 
 	/**
-	 * Get TOTP details.
-	 * 
-	 * @param	options The TOTP.GetTokenOptions and the OTP.AuthURLOptions object.
-	 * @returns	A detailed representation of the current TOTP.
-	 */
-	static Get( options: OTP.TOTP.GetTokenOptions & Omit<OTP.AuthURLOptions<'totp'>, 'type'> )
-	{
-		const _options = Totp.ResolveOptions( options )
-
-		return (
-			{
-				code		: Hotp.GetToken( _options ),
-				authUrl		: Totp.AuthURL( _options ),
-				secrets		: Totp.GetSecrets( _options ),
-				..._options,
-			}
-		)
-		
-	}
-
-
-	/**
 	 * Generates a Time-Based One-Time Password (TOTP).
 	 *
 	 * @param	options The TOTP options. @see {@link Otp.TOTP.GetTokenOptions}
@@ -87,42 +65,6 @@ export class Totp extends Otp
 		return (
 			Hotp.GetToken( { ...rest, counter } )
 		)
-	}
-
-
-	/**
-	 * Resolve options with default values if necessary.
-	 * 
-	 * @param	options The options object.
-	 * @returns A non nullable options object.
-	 */
-	static ResolveOptions<
-		T extends (
-			OTP.TOTP.CounterOptions
-			& OTP.TOTP.GetTokenOptions
-			& Pick<OTP.TOTP.GetDeltaOptions, 'window'>
-		)
-	>( options: T )
-	{
-		const {
-			secret: {
-				key,
-				algorithm	= Totp.Algorithm,
-				encoding	= Totp.Encoding
-			},
-			counter	= Totp.Counter( options ),
-			digits	= Totp.Digits,
-			period	= Totp.Period,
-			time	= Date.now() / 1000,
-			epoch	= 0,
-			window	= 0,
-		} = options
-
-		return {
-			...options,
-			secret: { key, algorithm, encoding },
-			counter, digits, period, time, epoch, window,
-		} as NonNullableFields<DeepFull<T>>
 	}
 
 
