@@ -265,7 +265,7 @@ export namespace OTP
 		 * Options for verifying a TOTP token and determining the time-step delta.
 		 * 
 		 */
-		export interface GetDeltaOptions extends TOTP.GetTokenOptions, HOTP.GetDeltaOptions
+		export interface GetDeltaOptions extends TOTP.GetTokenOptions, Omit<HOTP.GetDeltaOptions, 'counter'>
 		{
 			/**
 			 * The number of time-step counter values to check before and after the expected counter during TOTP token verification.
