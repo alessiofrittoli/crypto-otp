@@ -129,7 +129,7 @@ export namespace OTP
 			{
 				/** The OTP type needed to distinguish whether the key will be used for counter-based HOTP or for TOTP. */
 				type: 'totp'
-			} & Pick<TOTP.CounterOptions, 'period'> & Pick<TOTP.GetTokenOptions, 'counter'>
+			} & Pick<TOTP.CounterOptions, 'period'>
 		)
 	)
 	
@@ -258,14 +258,14 @@ export namespace OTP
 		 * Defines the options required to generate a TOTP token.
 		 * 
 		 */
-		export type GetTokenOptions = HOTP.GetTokenOptions & CounterOptions
+		export type GetTokenOptions = Omit<HOTP.GetTokenOptions, 'counter'> & TOTP.CounterOptions
 		
 
 		/**
 		 * Options for verifying a TOTP token and determining the time-step delta.
 		 * 
 		 */
-		export interface GetDeltaOptions extends GetTokenOptions, HOTP.GetDeltaOptions
+		export interface GetDeltaOptions extends TOTP.GetTokenOptions, HOTP.GetDeltaOptions
 		{
 			/**
 			 * The number of time-step counter values to check before and after the expected counter during TOTP token verification.
