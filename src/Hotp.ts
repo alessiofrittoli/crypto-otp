@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto'
 import { Exception } from '@alessiofrittoli/exception'
 import { ErrorCode } from '@alessiofrittoli/exception/code'
 import { Otp } from './Otp'
@@ -87,19 +88,19 @@ export class Hotp extends Otp
 	
 		/** Fail if token is not of correct length */
 		if ( token.length !== digits ) return null
-	
-		/** Parse token to integer */
-		const intToken = parseInt( token, 10 )
-	
-		/** Fail if token is NaN */
-		if ( isNaN( intToken ) ) return null
 		
 		/** Loop from counter to ( counter + window ) inclusive */
 		for ( let i = _counter; i <= _counter + _window; ++i ) {
 
-			const _token = parseInt( Hotp.GetToken( { ...rest, digits, counter: i } ), 10 )
+			const _token = (
+				Hotp.GetToken( { ...rest, digits, counter: i } )
+			)
+			
+			const isValid = (
+				timingSafeEqual( Buffer.from( _token ), Buffer.from( token ) )
+			)
 
-			if ( _token === intToken ) {
+			if ( isValid ) {
 
 				const delta = i - _counter
 				
@@ -110,6 +111,7 @@ export class Hotp extends Otp
 				)
 
 			}
+
 		}
 	
 		return null
