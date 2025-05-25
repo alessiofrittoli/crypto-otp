@@ -38,12 +38,11 @@ export class Totp extends Otp
 	 */
 	static GetDelta( options: OTP.TOTP.GetDeltaOptions )
 	{
-		const {
-			counter = Totp.Counter( options ), ...rest
-		} = options
-
 		return (
-			Hotp.GetDelta( { ...rest, counter }, true )
+			Hotp.GetDelta( {
+				...options,
+				counter: Totp.Counter( options )
+			}, true )
 		)
 	}
 
@@ -59,8 +58,8 @@ export class Totp extends Otp
 		return (
 			Hotp.GetToken( {
 				...options,
-				counter: Totp.Counter( options ) }
-			)
+				counter: Totp.Counter( options )
+			} )
 		)
 	}
 

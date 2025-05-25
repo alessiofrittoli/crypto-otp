@@ -43,7 +43,7 @@ export class Hotp extends Otp
 	 * @param	options The TOTP options. @see {@link OTP.TOTP.GetDeltaOptions}
 	 * @returns	The delta number, null otherwise.
 	 */
-	static GetDelta( options: OTP.TOTP.GetDeltaOptions, twoSidedWindow?: boolean ): number | null
+	static GetDelta( options: OTP.HOTP.GetDeltaOptions, twoSidedWindow?: boolean ): number | null
 	
 	
 	/**
