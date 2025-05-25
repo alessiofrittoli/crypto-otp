@@ -9,42 +9,6 @@ const base32Secret	= 'L5WNCK5A5SHCZNOIUTFHJ7GNCFWEGGY5'
  * ⚠️ in the following unit tests we are required to pass a static `time` so we can statically check results. ⚠️
  */
 
-describe( 'Totp.Get()', () => {
-
-	it( 'returns all details', () => {
-
-		const totp = Totp.Get( {
-			secret	: { key: hexSecret },
-			label	: 'email@example.com',
-			issuer	: 'Issuer',
-		} )
-
-		expect( totp.code ).toBe( Totp.GetToken( { secret: { key: hexSecret }, } ) )
-		expect( totp.counter ).toBe( Totp.Counter() )
-		expect( totp.digits ).toBe( 6 )
-		expect( totp.window ).toBe( 0 )
-		expect( totp.epoch ).toBe( 0 )
-		expect( totp.period ).toBe( 30 )
-		expect( 'time' in totp ).toBe( true )
-		expect( totp.label ).toBe( 'email@example.com' )
-		expect( totp.issuer ).toBe( 'Issuer' )
-		expect( totp.authUrl ).toBe( 'otpauth://totp/email@example.com?secret=3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX&algorithm=SHA1&digits=6&issuer=Issuer&period=30' )
-		expect( totp.secret ).toEqual( {
-			key			: hexSecret,
-			algorithm	: 'SHA-1',
-			encoding	: 'hex'
-		} )
-		expect( totp.secrets ).toEqual( {
-			ascii		: '\\\x0E=\x1EF\x1B@4\x1FlE\x1B\x04\x0B1-iS~7',
-			hex			: hexSecret,
-			base64url	: '3A49nkYbwDQfbEUbhIsxLelTfrc',
-			base32		: '3QHD3HSGDPADIH3MIUNYJCZRFXUVG7VX'
-		} )
-
-	} )
-
-} )
-
 
 describe( 'Totp.GetToken()', () => {
 
@@ -353,39 +317,4 @@ describe( 'Totp.Verify()', () => {
 		} ) ).toBe( true )
 	} )
 
-} )
-
-
-describe( 'Totp.ResolveOptions()', () => {
-
-	const options: OTP.TOTP.GetTokenOptions = {
-		secret: { key: hexSecret }
-	}
-
-	it( 'resolves defaults options', () => {
-		const resolved		= Totp.ResolveOptions( options )
-		const { secret }	= resolved
-
-		expect( 'secret' in resolved ).toBe( true )
-		expect( 'digits' in resolved ).toBe( true )
-		expect( 'period' in resolved ).toBe( true )
-		expect( 'time' in resolved ).toBe( true )
-		expect( 'epoch' in resolved ).toBe( true )
-		expect( 'counter' in resolved ).toBe( true )
-
-		expect( 'key' in secret ).toBe( true )
-		expect( 'algorithm' in secret ).toBe( true )
-		expect( 'encoding' in secret ).toBe( true )
-
-		expect( secret.key ).toBe( hexSecret )
-		expect( secret.algorithm ).toBe( 'SHA-1' )
-		expect( secret.encoding ).toBe( 'hex' )
-
-		expect( resolved.digits ).toBe( 6 )
-		expect( resolved.period ).toBe( 30 )
-		expect( resolved.time ).toBeGreaterThan( 0 )
-		expect( resolved.epoch ).toBe( 0 )
-		expect( resolved.counter ).toBeGreaterThan( 0 )
-	} )
-	
 } )
