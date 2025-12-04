@@ -153,6 +153,21 @@ describe( 'Hotp.AuthURL()', () => {
 		expect( params.get( 'issuer' ) ).toBe( 'Issuer' )
 
 	} )
+
+
+	it( 'skips encoding if given key is already in base32', () => {
+
+		const url = new URL( Hotp.AuthURL( {
+			label	: 'example@email.com',
+			digits	: 8,
+			counter	: 10,
+			secret	: { key: base32Secret, encoding: 'base32' },
+		} ) )
+
+		expect( url.searchParams.get( 'secret' ) )
+			.toBe( base32Secret )
+
+	} )
 	
 } )
 
