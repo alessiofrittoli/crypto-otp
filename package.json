@@ -63,11 +63,11 @@
 		"//1a": "*********************************************************************",
 		"//1b": "******************** DEV - BUILD - LINT - RELEASE *******************",
 		"//1c": "*********************************************************************",
-		"dev": "NODE_ENV=development tsup --watch",
-		"build:prod": "NODE_ENV=production tsup",
+		"dev": "cross-env NODE_ENV=development tsup --watch",
+		"build:prod": "cross-env NODE_ENV=production tsup",
 		"build": "pnpm lint && pnpm test:ci && pnpm build:prod",
 		"lint": "eslint",
-		"release": "node scripts/publish.js --verbose --npm",
+		"release": "node scripts/release.js --verbose --npm",
 		"//2a": "*********************************************************************",
 		"//2b": "***************************** UNIT TESTS ****************************",
 		"//2c": "*********************************************************************",
@@ -89,36 +89,31 @@
 		"test:totp": "pnpm test:watch totp.test.ts"
 	},
 	"devDependencies": {
-		"@alessiofrittoli/node-scripts": "^2.6.0",
-		"@eslint/js": "^9.27.0",
-		"@jest/globals": "^29.7.0",
-		"@types/jest": "^29.5.14",
-		"@types/node": "^22.15.21",
-		"concurrently": "^9.1.2",
-		"dotenv": "^16.5.0",
-		"eslint": "^9.27.0",
-		"globals": "^16.2.0",
+		"@alessiofrittoli/node-scripts": "^3.2.0",
+		"@eslint/js": "^9.39.1",
+		"@jest/globals": "^30.2.0",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^24.10.1",
+		"concurrently": "^9.2.1",
+		"cross-env": "^10.1.0",
+		"dotenv": "^17.2.3",
+		"eslint": "^9.39.1",
+		"globals": "^16.5.0",
 		"http-server": "^14.1.1",
-		"jest": "^29.7.0",
-		"ts-jest": "^29.3.4",
+		"jest": "^30.2.0",
+		"ts-jest": "^29.4.6",
 		"ts-node": "^10.9.2",
-		"tsup": "^8.5.0",
-		"typescript": "^5.8.3",
-		"typescript-eslint": "^8.32.1"
+		"tsup": "^8.5.1",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.48.1"
 	},
 	"dependencies": {
-		"@alessiofrittoli/crypto-algorithm": "^2.3.0",
-		"@alessiofrittoli/crypto-encoder": "^2.4.0",
-		"@alessiofrittoli/crypto-key": "^3.2.0",
-		"@alessiofrittoli/exception": "^3.2.0",
-		"@alessiofrittoli/math-utils": "^1.13.0",
-		"@alessiofrittoli/type-utils": "^1.8.0",
-		"@alessiofrittoli/url-utils": "^3.5.0"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@alessiofrittoli/type-utils",
-			"esbuild"
-		]
+		"@alessiofrittoli/crypto-algorithm": "^2.4.0",
+		"@alessiofrittoli/crypto-encoder": "^3.2.0",
+		"@alessiofrittoli/crypto-key": "^3.3.0",
+		"@alessiofrittoli/exception": "^3.3.1",
+		"@alessiofrittoli/math-utils": "^1.16.0",
+		"@alessiofrittoli/type-utils": "^1.9.0",
+		"@alessiofrittoli/url-utils": "^3.7.1"
 	}
 }
