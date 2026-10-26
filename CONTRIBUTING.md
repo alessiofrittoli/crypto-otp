@@ -10,9 +10,9 @@ If you find a bug, have a question, or want to suggest a new feature:
 
 - Search Existing Issues: Check the [Issues](https://github.com/alessiofrittoli/crypto-otp/issues) tab to see if your concern has already been addressed.
 - Create a New Issue: If not, open a new issue. Please provide:
-	- A clear and descriptive title.
-	- Detailed steps to reproduce the issue (if applicable).
-	- Suggestions or ideas (if applicable).
+  - A clear and descriptive title.
+  - Detailed steps to reproduce the issue (if applicable).
+  - Suggestions or ideas (if applicable).
 
 ### 2. Fork the Repository
 
@@ -33,7 +33,7 @@ To make changes:
 - Navigate to your cloned repository:
 
 ```bash
-cd crypto-otp  
+cd crypto-otp
 ```
 
 - Create and switch to a new branch:
@@ -61,7 +61,7 @@ git add .
 - Write a meaningful commit message:
 
 ```bash
-git commit -m "Add feature/bug-fix description"  
+git commit -m "Add feature/bug-fix description"
 ```
 
 ### 6. Push to Your Fork
@@ -69,7 +69,7 @@ git commit -m "Add feature/bug-fix description"
 Push your branch to your forked repository:
 
 ```bash
-git push origin feature/your-feature-name  
+git push origin feature/your-feature-name
 ```
 
 ### 7. Submit a Pull Request

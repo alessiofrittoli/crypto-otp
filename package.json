@@ -1,6 +1,6 @@
 {
 	"name": "@alessiofrittoli/crypto-otp",
-	"version": "3.1.0",
+	"version": "3.2.0",
 	"description": "Lightweight TypeScript HOTP/TOTP library",
 	"type": "module",
 	"author": {
